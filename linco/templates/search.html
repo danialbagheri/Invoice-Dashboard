@@ -1,0 +1,90 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+body{
+  background: #f2f2f2;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.search {
+  width: 100%;
+  position: relative
+}
+
+.searchTerm {
+  float: left;
+  width: 100%;
+  border: 3px solid #00B4CC;
+  padding: 5px;
+  height: 20px;
+  border-radius: 5px;
+  outline: none;
+  color: #9DBFAF;
+}
+
+.searchTerm:focus{
+  color: #00B4CC;
+}
+
+.searchButton {
+  position: absolute;  
+  right: -50px;
+  width: 40px;
+  height: 36px;
+  border: 1px solid #00B4CC;
+  background: #00B4CC;
+  text-align: center;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+/*Resize the wrap to see the search bar change!*/
+.wrap{
+  width: 30%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+	</style>
+</head>
+<body>
+<div class="wrap">
+	<a href="/" style="text-decoration: none;color: black;"><h2>LINCO CARE</h2></a>
+   <form method='POST' class="search" action='.'>
+   	{% csrf_token %}
+      <input type="text" class="searchTerm" name="q" placeholder="What are you looking for?">
+      <button type="submit" class="searchButton">
+        GO
+     </button>
+    </form>
+
+       <div class="container">
+       	{% for a in result %}
+        <h3>{{ a.supplier_name }}</h3>
+        <p>Our ref: {{ a.our_ref }}<p>
+        <strong> Invoice date: </strong><p>{{ a.invoice_date }}</p>
+        <a href="{{ a.invoice }}"> Download the invoice</a>
+        <hr>
+    	{% empty %}
+    	<br>
+        <p>Sorry, no result found.</p>
+    	{% endfor %}
+       </div>
+
+
+
+</div>
+
+
+</div>
+</body>
+</html>
