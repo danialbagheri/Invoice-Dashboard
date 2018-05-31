@@ -1,0 +1,6 @@
+Currently in the db (2018-05-23):
+	>>> Invoices.objects.all()
+	<QuerySet [<Invoices: CloudSource - 2w123>, <Invoices: CloudSource - 11>, <Invoices: CloudSource - 1123>, <Invoices: Kcom - 22>, <Invoices: mcdonald - 25>]>
+	>>> Supplier.objects.all()
+	<QuerySet [<Supplier: CloudSource>, <Supplier: Kcom>, <Supplier: mcdonald>]>
+
