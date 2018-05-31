@@ -68,13 +68,13 @@ body{
     </form>
 
        <div class="container">
-       	{% for a in result %}
+       	  {% for a in result %}
         <h3>{{ a.supplier_name }}</h3>
         <p>Our ref: {{ a.our_ref }}<p>
         <strong> Invoice date: </strong><p>{{ a.invoice_date }}</p>
         <a href="{{ a.invoice }}"> Download the invoice</a>
         <hr>
-    	{% empty %}
+    	
     	<br>
         <p>Sorry, no result found.</p>
     	{% endfor %}

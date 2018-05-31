@@ -13,7 +13,10 @@ class InvoicesManager(models.Manager):
                          Q(supplier_ref__icontains=query)
                         )
             qs = qs.filter(or_lookup).distinct() # distinct() is often necessary with Q lookups
-        return qs
+            return qs
+        else:
+    		return "Didn't match"
+
 
 
 class Supplier(models.Model):
@@ -35,7 +38,7 @@ class Invoices(models.Model):
 	approved = models.BooleanField(default=False)
 	invoice_date = models.DateTimeField('invoice date', default=datetime.datetime.now, editable=True)
 
-	objects         = InvoicesManager()
+	objects = InvoicesManager()
 	def __unicode__(self):
 		return "{} - {}".format(self.supplier_name, self.our_ref)
 

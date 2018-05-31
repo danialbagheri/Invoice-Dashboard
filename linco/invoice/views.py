@@ -15,7 +15,7 @@ def SearchView(request):
     	qs = invoices_results
     	return render(request, 'search.html', context={"result":qs})
     else:
-    	qs =  Invoices.objects.none()
+    	qs = Invoices.objects.none()
     	return render(request, 'search.html', context={"result":qs})
-
+    
     
