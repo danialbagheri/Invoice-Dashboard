@@ -19,5 +19,9 @@ from invoice.views import *
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', SearchView, name='search'),
+    url(r'^$', HomePage, name='home'),
+    url(r'^search$', SearchView, name='search'),
+    url(r'^submit$', InvoiceUpload, name='invoice-upload'),
+    url(r'^newsupplier$', NewSupplier, name='new-supplier'),
+    url(r'^viewall$', ViewAll, name='viewall'),
 ]

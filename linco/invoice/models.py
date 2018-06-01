@@ -37,16 +37,16 @@ class Supplier(models.Model):
 
 class Invoices(models.Model):
 	"""docstring for ClassName"""
+	organisation = models.CharField(max_length=100,blank=True) 
 	supplier_name = models.ForeignKey('Supplier', on_delete=models.CASCADE)
 	supplier_ref = models.CharField(max_length=100, blank=True)
 	our_ref = models.CharField(max_length=100)
-	invoice = models.FileField(upload_to='invoice/%Y/%M/')
-	approved = models.BooleanField(default=False)
+	invoice = models.FileField(upload_to='static/invoice/%Y/%M/')
+	# approved = models.BooleanField(default=False)
 	invoice_date = models.DateTimeField('invoice date', default=datetime.datetime.now, editable=True)
-
+	invoice_value = models.IntegerField(default=0)
 
 	objects = InvoicesManager()
-
 	# objects is the manager name. accessed when using Invoices.objects.all() for example
 
 	def __unicode__(self):

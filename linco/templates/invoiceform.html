@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<div class="container">
+<div class="row">
+	<div class="col-lg-6">
+	{% for message in messages %}
+	<p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+	{% endfor %}
+
+	<form action="" method='post' enctype="multipart/form-data">
+		{% csrf_token %}<br/>
+		<label> Company:</label><br/>
+		{{ form.organisation }}<br/>
+		<label>Supplier Name: </label><br/>
+		{{ form.supplier_name }} <a href="{% url 'new-supplier' %}">Add a new supplier</a> <br/><br/>
+		<label>Invoice Date: </label><br/>
+		{{ form.invoice_date }}<br/>
+		<label>Upload the invoice here: </label><br/>
+		{{ form.invoice }}<br/><br/>
+		<label>Total Price:</label><br/>
+		{{ form.invoice_value }}<br/><br/>
+		<input type="submit" value="SUBMIT" class="btn btn-primary">
+		<br/>
+	</form>
+	</div>
+</div>
+</div>
+{% endblock content %}
