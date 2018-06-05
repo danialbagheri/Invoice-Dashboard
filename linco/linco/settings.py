@@ -119,7 +119,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-MEDIA_ROOT = '/Users/DanialBagheri/Sites/linco/linco/data/invoices/'
-MEDIA_URL = '/Users/DanialBagheri/Sites/linco/linco/data/'
+# MEDIA_ROOT = '/Users/DanialBagheri/Sites/linco/linco/data/invoices/'
+# MEDIA_URL = '/Users/DanialBagheri/Sites/linco/linco/data/'
 
 

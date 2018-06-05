@@ -50,6 +50,14 @@ def NewSupplier(request):
 		form = SupplierForm()
 	return render(request, 'newsupplier.html', context={"form":form})
 
+
 def ViewAll(request):
-	return render(request, 'viewall.html', context={})
+	if request.method == 'POST':
+		filter_date = request.POST['filter_date']
+		qyear = filter_date[:4]
+		qmonth = filter_date[5:7]
+		showall = Invoices.objects.filter(invoice_date__month=qmonth,invoice_date__year=qyear).order_by('-invoice_date')
+	else:
+		showall = Invoices.objects.all().order_by('-invoice_date')
+	return render(request, 'viewall.html', context={'showall': showall})
 
