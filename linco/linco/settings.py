@@ -119,6 +119,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static-cdn')
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 # MEDIA_ROOT = '/Users/DanialBagheri/Sites/linco/linco/data/invoices/'
 # MEDIA_URL = '/Users/DanialBagheri/Sites/linco/linco/data/'
 
