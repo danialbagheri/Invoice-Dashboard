@@ -27,7 +27,7 @@ class InvoicesManager(models.Manager):
 
 class Supplier(models.Model):
 	supplier_name = models.CharField(max_length=200,blank=True)
-	vat_number = models.IntegerField(blank=True, null=True)
+	vat_number = models.CharField(max_length=200,blank=True)
 	def __unicode__(self):
 		return "%s" % (self.supplier_name)
 		
@@ -37,6 +37,7 @@ class Supplier(models.Model):
 
 class Invoices(models.Model):
 	"""docstring for ClassName"""
+
 	organisation = models.CharField(max_length=100,blank=True) 
 	supplier_name = models.ForeignKey('Supplier', on_delete=models.CASCADE)
 	supplier_ref = models.CharField(max_length=100, blank=True)
@@ -45,6 +46,7 @@ class Invoices(models.Model):
 	# approved = models.BooleanField(default=False)
 	invoice_date = models.DateField('invoice date', default=datetime.datetime.now, editable=True)
 	invoice_value = models.FloatField(default=0)
+	payment_method = models.CharField(max_length=100, default="Credit Card", blank=True)
 
 	objects = InvoicesManager()
 	# objects is the manager name. accessed when using Invoices.objects.all() for example

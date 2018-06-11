@@ -11,6 +11,12 @@ class InvoicesForm(ModelForm):
 		("QHorizons", "QHorizons"),
 	)
 
+	PAYMENT_CHOICES = (
+		('Credit Card', 'Credit Card'),
+		('Bank Transfer', 'Bank Transfer'),
+		('Cheque', 'Cheque'),
+		('Cash', 'Cash'),
+	)
 
 	organisation = forms.ChoiceField(
 		label = ('organisation'),
@@ -21,13 +27,19 @@ class InvoicesForm(ModelForm):
 	invoice_date = forms.DateField(
 		initial=datetime.date.today,
 		required= False,
-		widget = forms.SelectDateWidget(attrs = {'class': 'form-control','type':'date','value':'2018-06-05'})
+		widget = forms.SelectDateWidget(attrs = {'class': 'form-control','type':'date'})
 		)
 	invoice = forms.FileField(
 		label = ('Upload Screenshot'), 
 		required = False,
 		help_text = 'Upload a the invoice',
 		widget = forms.FileInput(attrs = {'class': 'form-control-file'})
+		)
+	payment_method = forms.ChoiceField(
+		label = ('payment_method'),
+		required = True,
+		choices = PAYMENT_CHOICES,
+		widget = forms.Select(attrs = {'class': 'form-control'})
 		)
 
 	class Meta:
@@ -38,6 +50,7 @@ class InvoicesForm(ModelForm):
 		    'invoice_date',
 		    'invoice',
 		    'invoice_value',
+		    'payment_method',
 		)
 
 class SupplierForm(ModelForm):
@@ -48,7 +61,7 @@ class SupplierForm(ModelForm):
 		help_text = 'This is the company you have purchased from.',
 		widget = forms.TextInput(attrs = {'class': 'form-control'})
 	)
-	vat_number = forms.IntegerField(
+	vat_number = forms.CharField(
 		label = ('Vat Number'),
 		required = False,
 		widget = forms.TextInput(attrs = {'class': 'form-control'})

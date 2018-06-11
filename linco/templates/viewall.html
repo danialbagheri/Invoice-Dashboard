@@ -10,15 +10,37 @@
 <div class="container-fluid">
 <div class="row">
 
-<div class="col-6">
-
 	<div class="form-inline">
         <form class='input-group' method="POST" action="">
-        	<div class="form-group">
-        		{% csrf_token %}
-            	<label class="">Filter: </label>
-            	<input type="month" class="form-control" name="filter_date" />
-        	</div>
+          {% csrf_token %}
+          <div class="col-12 col-lg-4 col-md-4">
+          	 <div class="form-group">
+    		       	<label class="">Filter: </label>
+              	<input type="month" class="form-control" name="filter_date" />
+          	 </div>
+          </div>
+          <div class="col-12 col-lg-4 col-md-4">
+              <div class="form-group">
+                <label for="sel1" >Payment Method:</label>
+                <select class="form-control" id="sel1" name="payment_method">
+                  <option></option>
+                  <option>Credit Card</option>
+                  <option>Bank Transfer</option>
+                  <option>Cheque</option>
+                  <option>Cash</option>
+                </select>
+              </div>
+          </div>
+          <div class="col-12 col-lg-4 col-md-4">
+              <div class="form-group">
+                <label for="sel1" >Company Name:</label>
+                <select class="form-control" id="sel1" name="organisation">
+                  <option></option>
+                  <option>Linco Care</option>
+                  <option>QHorizons</option>
+                </select>
+              </div>
+          </div>
         <button type="submit" class="btn btn-secondary my-1">Submit</button>
        </form>
 	</div>
@@ -31,6 +53,7 @@
             <th scope="col">Supplier Name</th>
             <th scope="col">Date</th>
             <th scope="col">Amount</th>
+            <th scope="col">Payment Method</th>
             <th scope="col">Links</th>
           </tr>
         </thead>
@@ -40,7 +63,8 @@
             <th scope="row">{{ forloop.counter }}</th>
             <td>{{ a.supplier_name }}</td>
             <td>{{ a.invoice_date }}</td>
-            <td>£{{ a.invoice_value }}</td>
+            <td>£{{ a.invoice_value|floatformat:-2 }}</td>
+            <td>{{ a.payment_method }}</td>
             <td><a href="{{ a.invoice }}"> Download</a></td>
           </tr>
           {% endfor %}

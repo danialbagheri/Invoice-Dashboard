@@ -53,10 +53,17 @@ def NewSupplier(request):
 
 def ViewAll(request):
 	if request.method == 'POST':
-		filter_date = request.POST['filter_date']
-		qyear = filter_date[:4]
-		qmonth = filter_date[5:7]
-		showall = Invoices.objects.filter(invoice_date__month=qmonth,invoice_date__year=qyear).order_by('-invoice_date')
+		if request.POST['filter_date']:
+			filter_date = request.POST['filter_date']
+			qyear = filter_date[:4]
+			qmonth = filter_date[5:7]
+			showall = Invoices.objects.filter(invoice_date__month=qmonth,invoice_date__year=qyear).order_by('-invoice_date')
+		elif request.POST['payment_method']:
+			payment_method = request.POST['payment_method']
+			showall = Invoices.objects.filter(payment_method=payment_method).order_by('-invoice_date')
+		elif request.POST['organisation']:
+			organisation= request.POST['organisation']
+			showall = Invoices.objects.filter(organisation=organisation).order_by('-invoice_date')
 	else:
 		showall = Invoices.objects.all().order_by('-invoice_date')
 	return render(request, 'viewall.html', context={'showall': showall})
