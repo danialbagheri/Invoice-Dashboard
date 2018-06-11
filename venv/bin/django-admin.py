@@ -1,4 +1,4 @@
-#!/Users/DanialBagheri/Sites/linco/venv/bin/python
+#!/var/www/InvoiceLibrary/venv/bin/python
 from django.core import management
 
 if __name__ == "__main__":
