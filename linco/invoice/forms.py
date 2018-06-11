@@ -21,7 +21,7 @@ class InvoicesForm(ModelForm):
 	invoice_date = forms.DateField(
 		initial=datetime.date.today,
 		required= False,
-		widget = forms.SelectDateWidget(attrs = {'type':'date','value':'2018-06-05'})
+		widget = forms.SelectDateWidget(attrs = {'class': 'form-control','type':'date','value':'2018-06-05'})
 		)
 	invoice = forms.FileField(
 		label = ('Upload Screenshot'), 
