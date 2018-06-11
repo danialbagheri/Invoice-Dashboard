@@ -44,7 +44,7 @@ class Invoices(models.Model):
 	invoice = models.FileField(upload_to='static/invoice/%Y/%m/')
 	# approved = models.BooleanField(default=False)
 	invoice_date = models.DateField('invoice date', default=datetime.datetime.now, editable=True)
-	invoice_value = models.IntegerField(default=0)
+	invoice_value = models.FloatField(default=0)
 
 	objects = InvoicesManager()
 	# objects is the manager name. accessed when using Invoices.objects.all() for example

@@ -5,6 +5,7 @@ invoice_library_notes.txt
 venv/*
 venv
 *.db
-.sqite3
+*.sqite3
 linco/settings.py
+linco/db.sqlite3
 linco/linco/settings.py
