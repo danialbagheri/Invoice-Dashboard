@@ -17,6 +17,18 @@ class InvoicesForm(ModelForm):
 		('Cheque', 'Cheque'),
 		('Cash', 'Cash'),
 	)
+	EXPENSE_TYPE= (
+		('Stationary', 'Stationary'),
+		('IT', 'IT'),
+		('PR and Social Media', 'PR and Social Media'),
+		('Marketing', 'Marketing'),
+		('Equipment', 'Equipment'),
+		('Transport', 'Transport'),
+		('Maintenance', 'Maintenance'),
+		('Print', 'Print'),
+		('Others', 'Others'),
+	)
+
 
 	organisation = forms.ChoiceField(
 		label = ('organisation'),
@@ -24,10 +36,15 @@ class InvoicesForm(ModelForm):
 		choices = ORGANISATION,
 		widget = forms.Select(attrs = {'class': 'form-control'})
 		)
+	supplier_name = forms.ModelChoiceField(
+		queryset = Supplier.objects.all(),
+		initial=0,
+		widget = forms.Select(attrs = {'class': 'form-control'})
+		)
 	invoice_date = forms.DateField(
 		initial=datetime.date.today,
 		required= False,
-		widget = forms.SelectDateWidget(attrs = {'class': 'form-control','type':'date'})
+		widget = forms.SelectDateWidget(attrs = {'class': 'custom-select'})
 		)
 	invoice = forms.FileField(
 		label = ('Upload Screenshot'), 
@@ -41,16 +58,31 @@ class InvoicesForm(ModelForm):
 		choices = PAYMENT_CHOICES,
 		widget = forms.Select(attrs = {'class': 'form-control'})
 		)
+	expense_type = forms.ChoiceField(
+		label = ('expense_type'),
+		required = True,
+		choices = EXPENSE_TYPE,
+		widget = forms.Select(attrs = {'class': 'form-control'})
+		)
+	refund = forms.BooleanField(
+		label = ('refund'),
+		required = True,
+		widget = forms.CheckboxInput(attrs = {'class': 'form-check'})
+		)
 
 	class Meta:
 		model = Invoices
 		fields = (
 		    'organisation',
 		    'supplier_name',
+		    'purchased_item',
 		    'invoice_date',
 		    'invoice',
 		    'invoice_value',
+			'vat_amount',
 		    'payment_method',
+		    'expense_type',
+		    'refund',
 		)
 
 class SupplierForm(ModelForm):

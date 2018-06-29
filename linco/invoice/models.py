@@ -41,12 +41,15 @@ class Invoices(models.Model):
 	organisation = models.CharField(max_length=100,blank=True) 
 	supplier_name = models.ForeignKey('Supplier', on_delete=models.CASCADE)
 	supplier_ref = models.CharField(max_length=100, blank=True)
+	purchased_item = models.CharField(max_length=400, blank=True)
 	our_ref = models.CharField(max_length=100)
 	invoice = models.FileField(upload_to='static/invoice/%Y/%m/')
-	# approved = models.BooleanField(default=False)
+	refund = models.BooleanField(default=False, blank=True)
 	invoice_date = models.DateField('invoice date', default=datetime.datetime.now, editable=True)
 	invoice_value = models.FloatField(default=0)
+	vat_amount = models.FloatField(default=0,blank=True)
 	payment_method = models.CharField(max_length=100, default="Credit Card", blank=True)
+	expense_type = models.CharField(max_length=100, blank=True)
 
 	objects = InvoicesManager()
 	# objects is the manager name. accessed when using Invoices.objects.all() for example

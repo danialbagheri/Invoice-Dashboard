@@ -3,29 +3,63 @@
 {% load static %}
 <div class="container">
 <div class="row">
-	<div class="col-lg-6">
+	<div class="col-lg-2"></div>
+	<div class="col-lg-8">
 	{% for message in messages %}
 	<p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
 	{% endfor %}
 
 	<form action="" method='post' enctype="multipart/form-data">
 		{% csrf_token %}<br/>
-		<label> Company:</label><br/>
-		{{ form.organisation }}<br/>
-		<label>Supplier Name: </label><br/>
-		{{ form.supplier_name }} <a href="{% url 'new-supplier' %}">Add a new supplier</a> <br/><br/>
+		<div class="row">
+			<div class="col-6">
+				<label> Company:</label><br/>
+				{{ form.organisation }}<br/>
+			</div>
+			<div class="col-6">
+				<label>Supplier Name: </label><br/>
+
+				<div class="form-row">
+					<div class="form-group col-md-10">
+						{{ form.supplier_name }}
+					</div>
+					<div class="form-group col-md-2">
+						 <a href="{% url 'new-supplier' %}"><button type="button" class="btn btn-light"><strong>+</strong></button></a> <br/><br/>
+				 	</div>
+				</div>
+
+			</div>
+		</div>
+		<label>Purchased Item: </label><i>The name of item or items purchased.</i><br/>
+		{{ form.purchased_item }}<br/><br/>
 		<label>Invoice Date: </label><br/>
 		{{ form.invoice_date }}<br/>
 		<label>Upload the invoice here: </label><br/>
 		{{ form.invoice }}<br/><br/>
-		<label>Total Price:</label><br/>
-		£ {{ form.invoice_value }}<br/><br/>
+
+		<div class="row">
+			<div class="col-4">
+				<label>Total Price:</label><br/>
+				£ {{ form.invoice_value }}<br/><br/>
+			</div>
+			<div class="col-4">
+				<label>VAT:</label><i>(if known)</i><br/>
+				£ {{ form.vat_amount }}<br/><br/>
+			</div>
+			<div class="col-4">
+				<label>Is this a refund?</label><br/>
+				{{ form.refund }}<br/><br/>
+			</div>
+		</div>
+		<label>Expense Type:</label><br/>
+		{{ form.expense_type }}<br/><br/>
 		<label>Payment Method:</label><br/>
 		{{ form.payment_method }}<br/><br/>
 		<input type="submit" value="SUBMIT" class="btn btn-outline-primary">
 		<br/>
 	</form>
 	</div>
+	<div class="col-lg-2"></div>
 </div>
 </div>
 {% endblock content %}
