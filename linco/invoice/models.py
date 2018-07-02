@@ -50,7 +50,7 @@ class Invoices(models.Model):
 	vat_amount = models.FloatField(default=0,blank=True)
 	payment_method = models.CharField(max_length=100, default="Credit Card", blank=True)
 	expense_type = models.CharField(max_length=100, blank=True)
-	currency = models.CharField(max_length=600, blank=True)
+	currency = models.CharField(max_length=600, default="£",blank=True)
 
 	objects = InvoicesManager()
 	# objects is the manager name. accessed when using Invoices.objects.all() for example

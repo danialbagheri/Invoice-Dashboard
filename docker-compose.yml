@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  linco_db: # Database name
+    image: mysql:5.7
+    container_name: linco_db # Database name
+    # volumes:
+    #   - ./src/database/initdb.d:/docker-entrypoint-initdb.d
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: aieububsnlVUOBWHLEINA # any random string will do
+      MYSQL_DATABASE: linco_db # the name of your mysql database
+      MYSQL_USER: linco # the name of the database user
+      MYSQL_PASSWORD: K-117Gap)713567S # the password of the mysql user
+  web:
+    build: . #used when you have a Dockerfile
+    depends_on:
+      - linco_db
+    container_name: web
+    ports:
+      - "8000:8000"
+    restart: always
+    links:
+      - linco_db:mysql
+    tty: true
+    volumes:
+      - ./linco:/var/www/linco/
+    # command: python manage.py runserver 0.0.0.0:8000

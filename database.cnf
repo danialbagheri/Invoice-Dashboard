@@ -1,0 +1,6 @@
+[client]
+host = sqlite
+database = linco_db
+user = linco
+password = K-117Gap)713567S
+default-character-set = utf8
