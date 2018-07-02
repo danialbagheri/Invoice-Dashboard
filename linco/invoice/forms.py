@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django import forms
 from django.forms import ModelForm
 from django.utils.translation import ugettext_lazy as _
@@ -27,6 +28,11 @@ class InvoicesForm(ModelForm):
 		('Maintenance', 'Maintenance'),
 		('Print', 'Print'),
 		('Others', 'Others'),
+	)
+	CURRENCY = (
+		('£', 'British Pound'),
+		('$', 'United States Dollar'),
+		('€', 'EURO'),
 	)
 
 
@@ -66,10 +72,21 @@ class InvoicesForm(ModelForm):
 		)
 	refund = forms.BooleanField(
 		label = ('refund'),
-		required = True,
+		required = False,
 		widget = forms.CheckboxInput(attrs = {'class': 'form-check'})
 		)
-
+	currency = forms.ChoiceField(
+		label = ('currency'),
+		required = True,
+		choices = CURRENCY,
+		widget = forms.Select(attrs = {'class': 'form-control'})
+		)
+	purchased_item = forms.CharField(
+		label = 'purchased_item',
+		max_length=400,
+		required = True,
+		widget = forms.TextInput(attrs = {'class': 'form-control'})
+		)
 	class Meta:
 		model = Invoices
 		fields = (
@@ -83,6 +100,7 @@ class InvoicesForm(ModelForm):
 		    'payment_method',
 		    'expense_type',
 		    'refund',
+		    'currency',
 		)
 
 class SupplierForm(ModelForm):

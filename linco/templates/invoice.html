@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block head_title %}Search Result{% endblock %}
+
+{% block content %}
+{% load static %}
+<div class="container">
+{% for a in item %}
+	<div class="row">
+		<div class="col-12">
+			<h6>Purchased item(s):</h6>
+			<p style="font-size:39px;">{{ a.purchased_item }}</p>
+			<hr>
+		</div>
+		<div class="col-6">
+			<h5>Company Name:</h5><p>{{ a.organisation }}</p>
+			<h5>Invoice Date:</h5><p>{{ a.invoice_date }}</p>
+			<h5>Invoice Total:</h5>
+			{% if a.refund == True %}
+			  	<p class="text-success" style="font-size: 20px;">+ {{ a.currency }}{{ a.invoice_value|floatformat:-2 }}</p>
+
+			{% else %}
+			  <p style="font-size: 20px;">{{ a.currency }}{{ a.invoice_value|floatformat:-2 }}</p>
+			{% endif %}
+			<h5>VAT:</h5>
+				<p style="font-size: 20px;">{{ a.currency }}{{ a.vat_amount|floatformat:-2 }}</p>
+		</div>
+		<div class="col-6">
+			<h5>Supplier Name:</h5><p>{{ a.supplier_name }}</p>
+			<h5>Payment Method:</h5><p>{{ a.payment_method }}</p>
+			<h5>Expense Type:</h5><p>{{ a.expense_type }}</p>
+			<h5>Invoice:</h5><p><a href="{{ a.invoice }}"><button type="button" class="btn btn-outline-primary"> Download</button></a></p>
+		</div>
+	</div>
+{% endfor %}
+</div>
+{% endblock %}

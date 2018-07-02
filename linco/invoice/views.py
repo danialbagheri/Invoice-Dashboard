@@ -51,22 +51,29 @@ def NewSupplier(request):
 	return render(request, 'newsupplier.html', context={"form":form})
 
 
-def ViewAll(request):
+def InvoiceList(request):
 	if request.method == 'GET':
 		if request.GET.get('filter_date'):
 			filter_date = request.GET['filter_date']
 			qyear = filter_date[:4]
 			qmonth = filter_date[5:7]
-			showall = Invoices.objects.filter(invoice_date__month=qmonth,invoice_date__year=qyear).order_by('-invoice_date')
+			result = Invoices.objects.filter(invoice_date__month=qmonth,invoice_date__year=qyear).order_by('-invoice_date')
 		elif request.GET.get('payment_method'):
 			payment_method = request.GET['payment_method']
-			showall = Invoices.objects.filter(payment_method=payment_method).order_by('-invoice_date')
+			result = Invoices.objects.filter(payment_method=payment_method).order_by('-invoice_date')
 		elif request.GET.get('organisation'):
 			organisation= request.GET['organisation']
-			showall = Invoices.objects.filter(organisation=organisation).order_by('-invoice_date')
+			result = Invoices.objects.filter(organisation=organisation).order_by('-invoice_date')
 		else:
-			showall = Invoices.objects.all().order_by('-invoice_date')
-	# else:
-	# 	showall = Invoices.objects.all().order_by('-invoice_date')
-	return render(request, 'viewall.html', context={'showall': showall})
+			result = Invoices.objects.all().order_by('-invoice_date')
+
+	return render(request, 'invoicelist.html', context={'result': result})
+
+def InvoiceView(request):
+	if request.method == 'GET':
+		if request.GET.get('id'):
+			product_id = request.GET['id']
+			item = Invoices.objects.filter(id=product_id)
+	return render(request, 'invoice.html', context={'item': item})	
+
 

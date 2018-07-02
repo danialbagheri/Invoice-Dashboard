@@ -32,19 +32,29 @@
 		</div>
 		<label>Purchased Item: </label><i>The name of item or items purchased.</i><br/>
 		{{ form.purchased_item }}<br/><br/>
-		<label>Invoice Date: </label><br/>
-		{{ form.invoice_date }}<br/>
-		<label>Upload the invoice here: </label><br/>
-		{{ form.invoice }}<br/><br/>
+		
+		<div class="row">
+			<div class="col-6">
+				<label>Invoice Date: </label><br/>
+				{{ form.invoice_date }}<br/>
+			</div>
+			<div class="col-6">
+				<label>Upload the invoice here: </label><br/>
+				{{ form.invoice }}<br/>
+			</div>
+		</div>
+
+		<label>Currency: </label><br/>
+		{{ form.currency }}<br/>
 
 		<div class="row">
 			<div class="col-4">
 				<label>Total Price:</label><br/>
-				£ {{ form.invoice_value }}<br/><br/>
+				{{ form.invoice_value }}<br/><br/>
 			</div>
 			<div class="col-4">
 				<label>VAT:</label><i>(if known)</i><br/>
-				£ {{ form.vat_amount }}<br/><br/>
+				{{ form.vat_amount }}<br/><br/>
 			</div>
 			<div class="col-4">
 				<label>Is this a refund?</label><br/>

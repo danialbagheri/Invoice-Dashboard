@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^search$', SearchView, name='search'),
     url(r'^submit$', InvoiceUpload, name='invoice-upload'),
     url(r'^newsupplier$', NewSupplier, name='new-supplier'),
-    url(r'^viewall$', ViewAll, name='viewall'),
+    url(r'^invoicelist$', InvoiceList, name='InvoiceList'),
+    url(r'^invoice$', InvoiceView, name='Invoice'),
 ]
