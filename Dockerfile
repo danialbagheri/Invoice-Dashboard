@@ -24,7 +24,7 @@ ADD requirements.txt /var/www/
 RUN pip install -r requirements.txt
 COPY . /var/www/
 
-RUN pip install virtualenv
+
 WORKDIR /var/www/linco/
-RUN ["/bin/bash", "-c", "python manage.py makemigrations && python manage.py migrate"] 
+
 
