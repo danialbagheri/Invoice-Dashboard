@@ -30,9 +30,9 @@ class InvoicesForm(ModelForm):
 		('Others', 'Others'),
 	)
 	CURRENCY = (
-		('£', 'British Pound'),
-		('$', 'United States Dollar'),
-		('€', 'EURO'),
+		(u'£', 'British Pound'),
+		(u'$', 'United States Dollar'),
+		(u'€', 'EURO'),
 	)
 
 
