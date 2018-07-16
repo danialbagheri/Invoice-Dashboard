@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<div class="container">
+
+<a href="{% url 'WikiView' %}?edit">Edit this page</a>
+{{ textholder|safe }}
+
+
+</div>
+
+{% endblock content %}

@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from invoice.views import *
+from wiki.views import *
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -25,4 +26,5 @@ urlpatterns = [
     url(r'^newsupplier$', NewSupplier, name='new-supplier'),
     url(r'^invoicelist$', InvoiceList, name='InvoiceList'),
     url(r'^invoice$', InvoiceView, name='Invoice'),
+    url(r'^wiki$',WikiView, name='WikiView'),
 ]
