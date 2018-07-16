@@ -2,15 +2,14 @@
 
 {% block head_title %}Add New Supplier{% endblock %}
 {% block myhead %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 
 {% endblock myhead %}
 {% block content %}
 {% load static %}
-<div class="container-fluid">
-<div class="row">
-
-	<div class="form-inline">
+<div class="container">
+  <div class="row">
+    <div class="form-inline">
         <form class='input-group' action="">
 
           <div class="form-row">
@@ -40,58 +39,60 @@
                 <button type="submit" class="btn btn-secondary my-1">Submit</button>
             </div>
           </div>
-
-        
        </form>
-	</div>
+       
+	   </div>
+  </div>
 </div>
-<div class="col-lg-12">
-    	<table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Supplier Name</th>
-            <th scope="col">Date</th>
-            <th scope="col">Amount</th>
-            <th scope="col">Payment Method</th>
-            <th scope="col">Expense Type</th>
-            <th scope="col">Links</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for a in result %}
-          
-          <tr>   
-            <th scope="row">{{ forloop.counter }} </th>
-            <td><a href="{% url 'Invoice' %}?id={{ a.id }}">{{ a.supplier_name }}</a></td>
-            <td>{{ a.invoice_date }}</td>
-            {% if a.refund == True %}
-              <td class="table-success">+ {{ a.currency }}{{ a.invoice_value|floatformat:-2 }}</td>
-            {% else %}
-              <td>{{ a.currency }}{{ a.invoice_value|floatformat:-2 }}</td>
-            {% endif %}
-            <td>{{ a.payment_method }}</td>
-            <td>{{ a.expense_type }}</td>
-            <td><a href="{{ a.invoice }}"> Download</a></td>
-          </tr>
-          
-          {% endfor %}
-        </tbody>
-      </table>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-12">
+        	<table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Supplier Name</th>
+                <th scope="col">Date</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Payment Method</th>
+                <th scope="col">Expense Type</th>
+                <th scope="col">Links</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for a in result %}
+              
+              <tr>   
+                <th scope="row">{{ forloop.counter }} </th>
+                <td>
+                  <a href="{% url 'Invoice' %}?id={{ a.id }}">{{ a.supplier_name }}</a>
+                </td>
+                <td>{{ a.invoice_date }}</td>
+                {% if a.refund == True %}
+                  <td class="table-success">+ {{ a.currency }}{{ a.invoice_value|floatformat:-2 }}</td>
+                {% else %}
+                  <td>{{ a.currency }}{{ a.invoice_value|floatformat:-2 }}</td>
+                {% endif %}
+                <td>{{ a.payment_method }}</td>
+                <td>{{ a.expense_type }}</td>
+                <td><a href="{{ a.invoice }}"> Download</a></td>
+              </tr>
+              
+              {% endfor %}
+            </tbody>
+          </table>
 
+    </div>
+  </div>
 </div>
-</div>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>	
+	
 
 <script type="text/javascript">
-    $(function () {
-        $('#datetimepicker10').datetimepicker({
-            viewMode: 'years',
-            format: 'MM/YYYY'
-        });
-    });
+
+
+
 </script>
 
 {% endblock %}
