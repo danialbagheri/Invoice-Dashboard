@@ -1,17 +1,31 @@
 {% extends "base.html" %}
 
 {% block head_title %}Add New Supplier{% endblock %}
-{% block myhead %}
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 
-{% endblock myhead %}
 {% block content %}
 {% load static %}
+
+<div class="gap"></div>
 <div class="container">
   <div class="row">
-    <div class="form-inline">
-        <form class='input-group' action="">
+    <div class="col-4 col-xs-12">
+      <a href="{% url 'invoice-upload' %}" id="additem"><i class="fas fa-plus-circle fa-3x" style=""></i></a>
+    </div>
+    <div class="col-4 col-xs-12">
+      <form method='POST' class="form-inline" action="{% url 'search' %}">
+        {% csrf_token %}
+        <input type="text" class="form-control" type="search" name="q" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+      </form><br/>
+      <div class="search-center" style="">
+        <p style="float: left;padding-right: 5px;">Advance</p><i class="fas fa-caret-down fa-lg"></i>
+      </div>
+    </div>
+    <div class="col-4 col-xs-12"></div>
 
+    <div class="form-inline">
+
+        <form class="input-group" id="advancesearch" action="">
           <div class="form-row">
               <div class="form-group col-md-4 col-lg-4 col-xs-12 col-12">
     		       	<label class="">Filter by Date: </label>
@@ -89,10 +103,14 @@
 
 	
 
+{% endblock content %}
+{% block jquery3 %} 
 <script type="text/javascript">
+$(document).ready(() => {
 
-
-
+    $('.search-center').on('click', () => {
+    $('#advancesearch').toggle(50);
+  });
+})
 </script>
-
-{% endblock %}
+{% endblock jquery3 %}
