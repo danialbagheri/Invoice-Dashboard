@@ -1,12 +1,25 @@
 {% extends "base.html" %}
 
+{% block customstatic %}
+<style type="text/css">
 
+.markdown-body .highlight pre, .markdown-body, pre {
+  font-family: Menlo, Monaco, "Courier New", monospace;
+  background-color: #f6f8fa;
+  padding: 16px;
+  line-height: 1.5;
+}
+code {
+      font-family: Menlo, Monaco, "Courier New", monospace;
+      background-color: #f6f8fa;
+    }
 
-
+</style>
+{% endblock customstatic %}
 {% block content %}
 {% load static %}
 <!-- Sidebar  -->
-<nav id="sidebar">
+<nav id="sidebar" class="wikisidebar">
     <div class="sidebar-header">
         <h3>Linco Care Wiki</h3>
     </div>
@@ -52,53 +65,47 @@
         </li>
     </ul>
 
-    <ul class="list-unstyled CTAs">
-        <li>
-            <a href="https://bootstrapious.com/tutorial/files/sidebar.zip" class="download">Download source</a>
-        </li>
-        <li>
-            <a href="https://bootstrapious.com/p/bootstrap-sidebar" class="article">Back to article</a>
-        </li>
-    </ul>
-</nav>
-<div class="container" style="margin-left: 300px;">
 
-<a href="{% url 'WikiView' %}?edit">Edit this page</a>
+</nav>
+<div class="content">
+
 
 <!-- Page Content  -->
-<div id="content">
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
 
-            <button type="button" id="sidebarCollapse" class="btn btn-info">
-                <i class="fas fa-align-left"></i>
-                <span>Toggle Sidebar</span>
-            </button>
-            <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="fas fa-align-justify"></i>
-            </button>
+                <button type="button" id="sidebarCollapse" class="btn ">
+                    <i class="fas fa-align-left"></i>
+                    <span>Toggle Sidebar</span>
+                </button>
+                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-align-justify"></i>
+                </button>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="nav navbar-nav ml-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Page</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Page</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Page</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Page</a>
-                    </li>
-                </ul>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Page</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Page</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Page</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/wiki/edit/">
+                                <i class="far fa-edit"></i>
+                            EDIT</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
-
-    {{ textholder|safe }}
+        </nav>
+        <div class="gap"></div>
+        {{ textholder|safe }}
+    </div>
 </div>
 
 
@@ -108,7 +115,8 @@
 <script type="text/javascript">
 $(document).ready(function () {
 	$('#sidebarCollapse').on('click',() => {
-		$('#sidebar').animate({ width: '0',padding: '0'},300);
+		$('.wikisidebar').toggle(300);
+        $('.content').toggleClass('content-left', 400);
 	})
 });
 </script>
