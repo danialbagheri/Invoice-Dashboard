@@ -2,7 +2,10 @@
 {% block content %}
 <div class="gap"></div>
 <div class="container">
-	<h1> Profile </h1>
+	<h1> Welcome {{ user.first_name }}!</h1>
+	<br>
+	<h4> Thank you for logging in.</h4><br>
+	<h4> Profile info:</h4><br>
 	<p>Username: {{ user }}</p>
 	<p>First Name: {{ user.first_name }}</p>
 	<p>Last Name: {{ user.last_name }}</p>

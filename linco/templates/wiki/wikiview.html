@@ -17,41 +17,52 @@ code {
 </style>
 {% endblock customstatic %}
 {% block content %}
-{% load static %}
+
 <!-- Sidebar  -->
 <nav id="sidebar" class="wikisidebar">
     <div class="sidebar-header">
         <h3>Linco Care Wiki</h3>
     </div>
-    <br>
-    {% for key,value in categories.items %}
-    --{{ key }}<br>
-        {% for v in value %}
-        <td>{{v}}<br></td>
-        {% endfor %}
-    {% endfor %}
 
-
-
- <hr>
     <ul class="list-unstyled components">
-
-
-{% for key,value in categories.items %}
-        <li>
-            <a href="#{{ key }}" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">{{ key }}</a>
-
-            <ul class="collapse list-unstyled" id="{{ key }}">
-                {% for v in value %}
+        <p>Dummy Heading</p>
+        <li class="active">
+            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
+            <ul class="collapse list-unstyled" id="homeSubmenu">
                 <li>
-                    {{v}}
+                    <a href="#">Home 1</a>
                 </li>
-                {% endfor %} 
-
+                <li>
+                    <a href="#">Home 2</a>
+                </li>
+                <li>
+                    <a href="#">Home 3</a>
+                </li>
             </ul>
         </li>
-{% endfor %} 
-
+        <li>
+            <a href="#">About</a>
+        </li>
+        <li>
+            <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
+            <ul class="collapse list-unstyled" id="pageSubmenu">
+                <li>
+                    <a href="#">Page 1</a>
+                </li>
+                <li>
+                    <a href="#">Page 2</a>
+                </li>
+                <li>
+                    <a href="#">Page 3</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">Portfolio</a>
+        </li>
+        <li>
+            <a href="#">Contact</a>
+        </li>
     </ul>
 
 
@@ -93,12 +104,7 @@ code {
             </div>
         </nav>
         <div class="gap"></div>
-       
-
-        {% for a in wikientry %}
-        <a href="{% url "wikiview" id=a.id %}">{{ a.title }}</a> <br>
-        {% endfor %}
-
+        {{ textholder|safe }}
     </div>
 </div>
 

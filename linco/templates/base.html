@@ -12,7 +12,7 @@
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type='text/css'>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
   <!-- Our Custom CSS -->
-  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="{% static "css/main.css" %}">
   {% block customstatic %}{% endblock customstatic %}
 </head>
 <body>
@@ -36,7 +36,7 @@
       </li>
 
       <li class="nav-item">
-      <a class="nav-link" href="{% url 'WikiView' %}">Wiki</a>
+      <a class="nav-link" href="">Wiki</a>
       </li>
 
     </ul>
@@ -53,7 +53,7 @@
   <ul>
     <li>
         <a href="/">
-          <img src="../static/assets/logo.png" style="display:block;padding: 5px;width: 70%;margin: 0 auto 100px auto;">
+          <img src="{% static "assets/logo.png" %}" style="display:block;padding: 5px;width: 70%;margin: 0 auto 100px auto;">
         </a>
       
     </li>
@@ -76,7 +76,7 @@
           
       </li>
       <li class="has-subnav">
-          <a href="{% url 'WikiView' %}">
+          <a href="{% url 'wikihome' %}">
              <i class="fab fa-wikipedia-w fa-2x"></i>
               <span class="nav-text">
                   Wiki
@@ -137,12 +137,21 @@
 
   <ul class="logout">
       <li>
-         <a href="#">
+        {% if user.is_authenticated %}
+         <a href="{% url "logout" %}">
                <i class="fa fa-power-off fa-2x"></i>
               <span class="nav-text">
                   Logout
               </span>
           </a>
+        {% else %}
+        <a href="{% url "login" %}">
+              <i class="fas fa-sign-in-alt fa-2x"></i>
+             <span class="nav-text">
+                 Login
+             </span>
+         </a>
+        {% endif %}
       </li>  
   </ul>
 </nav>
