@@ -20,6 +20,9 @@ from wiki.views import *
 from django.contrib.auth.views import login, logout
 from accounts.views import *
 
+
+# handler404 = 'blog.views.page_not_found_view'
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', HomePage, name='home'),
@@ -36,3 +39,4 @@ urlpatterns = [
     url(r'^accounts/profile/$',profile, name='profile'),
     url(r'^wiki/edit$',WikiEdit, name='Wiki_edit'),
 ]
+# + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

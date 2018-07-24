@@ -9,29 +9,37 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 def wikihome(request):
-	category_queryset = Category.objects.all()
+	category = Category.objects.all()
 	wikientry = Wikientry.objects.all()
-	all_slugs = [ x.slug for x in category_queryset ]
-	categories = {}
-	sub_categories = []
-	for category in category_queryset:
-		if category.parent is None:
-			parent = category.category_name
-			child = []
-			for item in category_queryset:
-				if str(item.parent) == parent:
-					child.append(item.category_name)
-				categories[parent]=child
+	# def get_queryset_data(self):
+	# 	Categoryname = category.name
+	# 	self.categoryname = categoryname
+	# 	categorynames = list(map(lambda c: c.name, category.get_sub_categorys()))
+	# 	wikientry = objects.filter(category__name__in=categorynames)
+	# 	pass
+	# wikientry = category_queryset__Wikientry()
 
-			sub_categories = []
-			for item in category_queryset:
-				if item.parent == category.parent:
-					sub_categories.append(item.category_name)
+	# categories = {}
+	# sub_categories = []
+	# for category in category_queryset:
+	# 	if category.parent is None:
+	# 		parent = category.category_name
+	# 		child = []
+
+	# 		for item in category_queryset:
+	# 			if str(item.parent) == parent:
+	# 				child.append(item.category_name)
+	# 			categories[parent]=child
+
+	# 		sub_categories = []
+	# 		for item in category_queryset:
+	# 			if item.parent == category.parent:
+	# 				sub_categories.append(item.category_name)
+
 
 	context = {
-	"category" : category_queryset,
-	"wikientry": wikientry,
-	'categories':categories
+	"category": category,
+	"wikientry": wikientry
 	}
 	return render(request, 'wiki.html', context)
 

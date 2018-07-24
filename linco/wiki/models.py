@@ -5,7 +5,7 @@ from django.db import models
 from django.contrib import admin
 # Create your models here.
 from django.conf import settings
-
+from django.utils.timezone import now
 User = settings.AUTH_USER_MODEL
 
 class Category(models.Model):
@@ -26,7 +26,29 @@ class Category(models.Model):
 		unique_together = ('slug', 'parent',) #enforcing that there can not be two categories under a parent with same slug
 		ordering = ['category_name']
 
+	def get_category_tree(self):
+		categorys = []
+		def parse(category):
+		    categorys.append(category)
+		    if category.parent_category:
+		        parse(category.parent_category)
+		parse(self)
+		return categorys
 
+	def get_sub_categorys(self):
+		categorys = []
+		all_categorys = Category.objects.all()
+        
+		def parse(category):
+		    if category not in categorys:
+		        categorys.append(category)
+		    childs = all_categorys.filter(parent_category=category)
+		    for child in childs:
+		        if category not in categorys:
+		            categorys.append(child)
+		        parse(child)
+		parse(self)
+		return categorys
 
 
 class Wikientry(models.Model):
@@ -36,7 +58,7 @@ class Wikientry(models.Model):
 	title = models.CharField(max_length=200,blank=True)
 	wiki_content=models.TextField(blank=True) 
 	last_edit= models.DateTimeField(auto_now=True, auto_now_add=False)
-	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
+	created_time = models.DateTimeField(default=now)
 	category = models.ForeignKey('Category', null=True, blank=True)
 	
 	def __unicode__(self):
@@ -57,4 +79,13 @@ class Wikientry(models.Model):
 	    return breadcrumb[-1:0:-1]
 
 	class Meta:
-		ordering = ["-timestamp", "-last_edit"]
+		ordering = ["-created_time", "-last_edit"]
+		get_latest_by = 'last_edit'
+
+	def get_absolute_url(self):
+		return "/wiki/%s/" % self.id
+
+	def get_category_tree(self):
+	    tree = self.category.get_category_tree()
+
+

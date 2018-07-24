@@ -24,16 +24,35 @@ code {
         <h3>Linco Care Wiki</h3>
     </div>
     <br>
-    {% for key,value in categories.items %}
-    --{{ key }}<br>
-        {% for v in value %}
-        <td>{{v}}<br></td>
-        {% endfor %}
-    {% endfor %}
+
+{% regroup category by parent as subcategory %}  
+{% for parent in subcategory %}
+    {% if parent.grouper %}
+    <ul class="list-unstyled components">
+    {{ parent.grouper }} <br>
+        {% for i in parent.list %}
+
+            {% regroup wikientry by category as category_list %}
+            <ul>
+                {% for category in category_list %}
+                    {% if category.grouper == i %}
+                        <li>+ {{ category.grouper }}
+                            <ul>
+                                {% for a in category.list %}
+                                    <li>{{ a.title }}</li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {%endfor%}
+    </ul>
+    {% endif %}
+    
+{% endfor %}
 
 
-
- <hr>
     <ul class="list-unstyled components">
 
 
