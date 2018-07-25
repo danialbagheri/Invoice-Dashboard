@@ -14,12 +14,13 @@ class Category(models.Model):
 	parent = models.ForeignKey('self', blank=True, null=True, related_name='child')
 	
 	def __unicode__(self):
-		full_path = [self.category_name]
-		k = self.parent
-		while k is not None:
-		    full_path.append(k.category_name)
-		    k = k.parent
-		return ' -> '.join(full_path[::-1])
+		# full_path = [self.category_name]
+		# k = self.parent
+		# while k is not None:
+		#     full_path.append(k.category_name)
+		#     k = k.parent
+		# return ' -> '.join(full_path[::-1])
+		return "%s" % self.category_name
 
 	class Meta:
 		verbose_name_plural = 'Categories'

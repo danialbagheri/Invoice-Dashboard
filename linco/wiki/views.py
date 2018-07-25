@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 def wikihome(request):
-	category = Category.objects.all()
+	category = set(Category.objects.all())
 	wikientry = Wikientry.objects.all()
 	# def get_queryset_data(self):
 	# 	Categoryname = category.name
@@ -44,6 +44,8 @@ def wikihome(request):
 	return render(request, 'wiki.html', context)
 
 def wikiview(request, id):
+	category = set(Category.objects.all())
+	wikientry = Wikientry.objects.all()
 	#Reading the markdown file and rendering it
 	# md_entry = Wikientry.objects.get(subject="NGINX")
 	md_entry = get_object_or_404(Wikientry, id=id)
@@ -51,6 +53,8 @@ def wikiview(request, id):
 
 	# rendering
 	context = {
+	"category": category,
+    "wikientry": wikientry,
 	"textholder" : a
 	}
 	return render(request, 'wiki/wikiview.html', context)

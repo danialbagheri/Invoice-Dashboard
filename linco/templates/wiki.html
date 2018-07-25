@@ -25,53 +25,45 @@ code {
     </div>
     <br>
 
-{% regroup category by parent as subcategory %}  
-{% for parent in subcategory %}
+
+{% regroup category by parent as subcategory %}
+{% regroup wikientry by category as category_list %}  
+<ul class="list-unstyled components">
+{% for parent in subcategory %} 
+
     {% if parent.grouper %}
-    <ul class="list-unstyled components">
-    {{ parent.grouper }} <br>
+    
+    <li class="">
+    <a href="#{{ parent.grouper|slugify }}" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">{{ parent.grouper }} </a>
         {% for i in parent.list %}
 
-            {% regroup wikientry by category as category_list %}
-            <ul>
+            
+            <ul class="collapse list-unstyled" id="{{ parent.grouper|slugify }}">
+               
                 {% for category in category_list %}
+                
                     {% if category.grouper == i %}
-                        <li>+ {{ category.grouper }}
-                            <ul>
-                                {% for a in category.list %}
-                                    <li>{{ a.title }}</li>
+                    
+                        <li>
+                        <a href="#{{ category.grouper|slugify }}" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"> {{ category.grouper }}</a>
+                            <ul class="collapse list-unstyled" id="{{ category.grouper|slugify }}">
+                               {% for a in category.list %}
+                                    <li><a href="{% url "wikiview" id=a.id %}">{{ a.title }}</a></li>
                                 {% endfor %}
                             </ul>
                         </li>
                     {% endif %}
                 {% endfor %}
+                
+                
             </ul>
-        {%endfor%}
-    </ul>
+    </li>
+        {% endfor %}
+    
     {% endif %}
     
 {% endfor %}
-
-
-    <ul class="list-unstyled components">
-
-
-{% for key,value in categories.items %}
-        <li>
-            <a href="#{{ key }}" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">{{ key }}</a>
-
-            <ul class="collapse list-unstyled" id="{{ key }}">
-                {% for v in value %}
-                <li>
-                    {{v}}
-                </li>
-                {% endfor %} 
-
-            </ul>
-        </li>
-{% endfor %} 
-
-    </ul>
+</ul>
 
 
 </nav>
@@ -113,7 +105,7 @@ code {
         </nav>
         <div class="gap"></div>
        
-
+        <h2>List of the latest articles</h2>
         {% for a in wikientry %}
         <a href="{% url "wikiview" id=a.id %}">{{ a.title }}</a> <br>
         {% endfor %}
