@@ -7,43 +7,58 @@
 
 
 <div class="container-fluid">
-	
   <div class="row">
-    <div class="col-12">
+    <div class="col-lg-12">
+        	<table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Supplier Name</th>
+                <th scope="col">Date</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Payment Method</th>
+                <th scope="col">Expense Type</th>
+                <th scope="col">Links</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for a in result %}
+              
+              <tr>   
+                <th scope="row">{{ forloop.counter }} </th>
+                <td>
+                  <a href="{% url 'Invoice' %}?id={{ a.id }}">{{ a.supplier_name }}</a>
+                </td>
+                <td>{{ a.invoice_date }}</td>
+                {% if a.refund == True %}
+                  <td class="table-success">+ {{ a.currency }}{{ a.invoice_value|floatformat:-2 }}</td>
+                {% else %}
+                  <td>{{ a.currency }}{{ a.invoice_value|floatformat:-2 }}</td>
+                {% endif %}
+                <td>{{ a.payment_method }}</td>
+                <td>{{ a.expense_type }}</td>
+                <td><a href="{{ a.invoice }}"> Download</a></td>
+              </tr>             
+              {% endfor %}
+              <!-- Show the result -->
+              <tr>
+                <th scope="row"></th>
+                <td>
+                  <strong>TOTAL</strong>
+                </td>
+                <td></td>
+              
+                <td>£ {{ total }}</td>
+              
+                <td></td>
+                <td></td>
+                <td>
+              
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
-       	  
-<!--         <h3>{{ a.supplier_name }}</h3>
-        <p>Our ref: {{ a.our_ref }}<p>
-        <strong> Invoice date: </strong><p>{{ a.invoice_date }}</p>
-        <a href="{{ a.invoice }}"> Download the invoice</a>
-        <hr> -->
-    	<table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Supplier Name</th>
-            <th scope="col">Date</th>
-            <th scope="col">Amount</th>
-            <th scope="col">Links</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for a in result %}
-          <tr>   
-            <th scope="row">{{ forloop.counter }}</th>
-            <td>{{ a.supplier_name }}</td>
-            <td>{{ a.invoice_date }}</td>
-            <td>£{{ a.invoice_value }}</td>
-            <td><a href="{{ a.invoice }}"> Download</a></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-
-
-    	<br>
-    	
-       </div>
     </div>
   </div>
 </div>

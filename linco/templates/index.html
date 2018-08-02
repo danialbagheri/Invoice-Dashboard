@@ -2,7 +2,55 @@
 {% block content %}
 {% load static %}
 
-<h1 style="text-align: center;margin-top: 20%;"> Welcome to Linco Care Marketing department<br ><a href="https://lincocare.com">VISIT OUR WEBSITE</a></h1>
 
+<div class="container">
+    <h1 style="text-align: center;margin-top: 20%;"> Welcome to Linco Care Marketing department
+        <br>
+        <a href="https://lincocare.com">VISIT OUR WEBSITE</a>
+    </h1>
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-6">
+            <div class="panel-holder">
+                <div class="mypanel-heading">Total spending of the month</div>
+                <div class="mypanel-body">
+                    <div id="monthSpending"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="panel-holder">
+                <div class="mypanel-heading">Total spending of this year to date</div>
+                <div class="mypanel-body">
+                    <div id="yearSpending"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var xmlhttp = new XMLHttpRequest();
+    var url = "/invoice-api/"
+
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var myArr = JSON.parse(this.responseText);
+            jsonRender(myArr);
+        }
+    };
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+
+    function jsonRender(arr) {
+        var month = '<p> Month: ' + arr.this_month + '</p>'+ '<h3>£' + arr.total_cost_month + '</h3>';
+        var year = '<p> Year: ' + arr.this_year + '</p>' +'<h3>£' + arr.total_cost_year + '</h3>'
+        document.getElementById("monthSpending").innerHTML = month;
+        document.getElementById("yearSpending").innerHTML = year;
+    }
+
+</script>
 
 {% endblock content %}

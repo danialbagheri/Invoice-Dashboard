@@ -91,15 +91,40 @@
                 <td>{{ a.expense_type }}</td>
                 <td><a href="{{ a.invoice }}"> Download</a></td>
               </tr>
+               {% endfor %}
+              <!-- Show the result -->
+              <tr>
+                <th scope="row"></th>
+                <td><strong>TOTAL</strong></td>
+                <td></td>
+                
+                <td class="table-success">£{{ page_total }}</td>
+                
+                <td></td>
+                <td></td>
+                <td>
+
+                </td>
+              </tr>
               
-              {% endfor %}
             </tbody>
           </table>
+      <div class="row">
 
     </div>
   </div>
 </div>
-
+<div class="container">
+  <div class="row">
+    <div class="col-12 text-center">
+      {% if show_prev_page %}
+      <a href="../{{ prev_page_num }}"><i class="fas fa-angle-left"></i> PREV </a>
+      {% endif %}  {% if show_next_page %}
+      <a href="../{{ next_page_num }}">NEXT <i class="fas fa-angle-right"></i></a>
+      {% endif %}
+    </div>
+  </div>
+</div>
 
 	
 

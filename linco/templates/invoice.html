@@ -4,10 +4,13 @@
 
 {% block content %}
 {% load static %}
+<br><br>
+
 <div class="container">
 {% for a in item %}
 	<div class="row">
 		<div class="col-12">
+			<a href="{{ prev_page }}"><i class="fas fa-angle-left"></i> BACK</a><br><br>
 			<h6>Purchased item(s):</h6>
 			<p style="font-size:39px;">{{ a.purchased_item }}</p>
 			<hr>

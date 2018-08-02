@@ -129,7 +129,26 @@ height: 100%;
   font-weight: 300;
   src: local('Titillium WebLight'), local('TitilliumWeb-Light'), url(http://themes.googleusercontent.com/static/fonts/titilliumweb/v2/anMUvcNT0H1YN4FII8wpr24bNCNEoFTpS2BTjF6FB5E.woff) format('woff');
 }
-
+/* HOME PAGE PANELS */
+.panel-holder {
+	margin: 10px;
+	padding: 0 ;
+	position: relative;
+    -moz-box-shadow: 1px 2px 4px rgba(0, 0, 0,0.5);
+    -webkit-box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+	box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+	border-radius: 5px;
+}
+.mypanel-heading {
+	font-weight: 400;
+	color: #fff;
+	padding: 8px;
+	border-radius: 5px 5px 0 0;
+	background-color: #223F99 !important;
+}
+.mypanel-body{
+	padding: 9px;
+}
 
 /*INVOICE LIST PAGE*/
 
