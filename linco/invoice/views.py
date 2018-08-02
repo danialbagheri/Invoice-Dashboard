@@ -157,7 +157,7 @@ def invoice_api(request):
 	total_cost_month = 0
 	for i in this_month_invoices:
 		total_cost_month += i.invoice_value
-
+	total_cost_month = "%0.2f" % total_cost_month
 	# Spending of this year
 	this_year_invoices = Invoices.objects.filter(
 	invoice_date__year=date.year,
@@ -166,7 +166,7 @@ def invoice_api(request):
 	total_cost_year = 0
 	for i in this_year_invoices:
 		total_cost_year += i.invoice_value
-	
+	total_cost_year = "%0.2f" % total_cost_year
 	data = {
 		"total_cost_month": total_cost_month,
 		"total_cost_year": total_cost_year,
