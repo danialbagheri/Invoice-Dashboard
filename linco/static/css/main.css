@@ -38,6 +38,9 @@ transition:width .05s linear;
 z-index:1000;
 }
 
+.wrapcontent{
+	margin-left: 60px;
+}
 .main-menu>ul {
 margin:7px 0;
 }
@@ -189,14 +192,13 @@ height: 100%;
 	overflow:hidden;
 	padding: 30px;
 	z-index:700;
-	margin-left: 60px;
 }
 
 .content {
 	padding-right: 20px;
 	padding-left: 15px;
 	margin-right: auto;
-	margin-left: 390px;
+	margin-left: 330px;
 }
 
 .content-left {
