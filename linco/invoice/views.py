@@ -60,7 +60,7 @@ def redir_to_invoicelist(request):
 def invoice_list(request, page_num):
 	NUM_ITEM_TO_SHOW = 30
 
-	# pageview 
+	# pageview
 	if page_num == "":
 		page_num = 1
 	page_num = int(page_num)
@@ -85,7 +85,7 @@ def invoice_list(request, page_num):
 		show_next_page = True
 	else:
 		show_next_page = False
-	
+
 	page_num += 1
 	next_page_num = page_num + 1
 	prev_page_num = page_num - 1
@@ -167,13 +167,29 @@ def invoice_api(request):
 	for i in this_year_invoices:
 		total_cost_year += i.invoice_value
 	total_cost_year = "%0.2f" % total_cost_year
+
+	# Amazon API
+	import mws, os
+	orders_api = mws.Orders(
+		access_key=os.environ['MWS_ACCESS_KEY'],
+		secret_key=os.environ['MWS_SECRET_KEY'],
+		account_id=os.environ['MWS_ACCOUNT_ID'],
+		region='UK',  # if necessary
+	)
+	service= orders_api.get_service_status()
+	last_updated_after='{}-{:02d}-01'.format(date.year,date.month)
+	response = orders_api.list_orders(marketplaceids="A1F83G8C2ARO7P", lastupdatedafter=last_updated_after, max_results='100')
+	response = response.parsed
+	total_amazon_orders = response.Orders.Order[0].OrderTotal.Amount
+	print(total_amazon_orders)
 	data = {
 		"total_cost_month": total_cost_month,
 		"total_cost_year": total_cost_year,
 		"this_month": this_month,
-		"this_year": this_year
-		}
+		"this_year": this_year,
+		"Amazon": response,
+		"total_amazon_orders": "total_amazon_orders"
+	}
+
+
 	return JsonResponse(data, encoder=JSONEncoder)
-
-
-
