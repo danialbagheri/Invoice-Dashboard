@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from invoice.forms import InvoicesForm, SupplierForm
 from django.shortcuts import render, redirect
 from .models import Supplier, Invoices
 from django.contrib import messages
+
 # Create your views here.
 # from django.views.generic import ListView
 # from itertools import chain
@@ -44,7 +45,7 @@ def NewSupplier(request):
 	if request.method == 'POST':
 		form = SupplierForm(request.POST)
 		if form.is_valid():
-			print "form is valid"
+			print("form is valid")
 			form.save()
 			messages.success(request, 'Invoice has been successfully recorded')
 		else:

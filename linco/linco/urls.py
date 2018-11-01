@@ -13,12 +13,14 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+
+from django.conf.urls import include, url
 from django.contrib import admin
 from invoice.views import *
 from wiki.views import *
 from django.contrib.auth.views import login, logout
 from accounts.views import *
+from django.http import HttpResponse
 
 
 # handler404 = 'blog.views.page_not_found_view'
@@ -41,5 +43,6 @@ urlpatterns = [
     url(r'^register$',register, name='register'),
     url(r'^accounts/profile/$',profile, name='profile'),
     url(r'^wiki/edit$',WikiEdit, name='Wiki_edit'),
+    url(r'^reviews', include('reviews.urls')),
 ]
 # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

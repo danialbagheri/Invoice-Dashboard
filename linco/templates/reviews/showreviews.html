@@ -1,0 +1,16 @@
+<h1>ejnejner</h1>
+{% for review in reviews_to_show %}
+	{{review.approved}}
+	{{review.content}}
+	{{review.date_added}}
+	{{review.downvotes}}
+	{{review.email}}
+	{{review.location}}
+	{{review.name}}
+	{{review.product}}
+	{{review.score}}
+	{{review.title}}
+	{{review.upvotes}}
+	<br/>
+	<br/>
+{% endfor %}

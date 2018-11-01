@@ -2,3 +2,4 @@ Django==1.11.12
 pytz==2018.3
 mysqlclient
 mws
+markdown2
