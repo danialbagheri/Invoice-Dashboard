@@ -14,6 +14,7 @@ from operator import itemgetter
 import datetime
 from dateutil.parser import parse
 
+from django.core.paginator import Paginator
 
 # Create your views here.
 def chooseBrand(request):
@@ -35,6 +36,9 @@ def showReviews(request):
 	page_num = request.GET.get('page')
 	if page_num == None:
 		page_num = 1
+	else:
+		page_num = int(page_num)
+	
 	# do api request to get reviews with filters
 
 	# response = requests.get("https://api.lincocare.co.uk/reviews/?brand=%s&product=%s" % (brand, product))
@@ -48,6 +52,8 @@ def showReviews(request):
 	reviews_to_sort = []
 	for review in reviews:
 		reviews_to_sort.append(reviews[review])
+
+	pprint.pprint(reviews_to_sort)
 
 	# reviews_sorted = sorted(reviews_to_sort, key=lambda k: k['name'].lower())
 	if sort_on == "unpublished":
@@ -67,14 +73,16 @@ def showReviews(request):
 		reviews_sorted = sorted(reviews_to_sort, key=lambda k: datetime.datetime.strptime( k['date_added'], "%a, %d %b %Y %X %Z" ), reverse=True)
 
 	
+
 	# slice to paginate
 	# slice all_blogposts to get blogposts_to_show. 
-	
-	start_slice = page_num * NUM_REVIEWS_TO_SHOW 
+	start_slice = (page_num-1) * NUM_REVIEWS_TO_SHOW 
 	end_slice = start_slice + NUM_REVIEWS_TO_SHOW
 	reviews_to_show = reviews_sorted[start_slice:end_slice]
 	
-	pprint.pprint(reviews_to_show)
+	paginated_reviews = Paginator(reviews_sorted, 10)
+
+	pprint.pprint(paginated_reviews.page(page_num))
 
 	if len(reviews_to_show) <= 0: 
 		raise Http404("No reviews to show.")
@@ -82,7 +90,6 @@ def showReviews(request):
 
 	# Make pagination numbers for the bottom of the page
 
-	# pass reviews through to context
 	
 
 
@@ -107,7 +114,10 @@ def showReviews(request):
 	# 	show_prev_page = False
 
 
-	context = { "reviews_to_show": reviews_to_show, }
+	context = {
+	"reviews_to_show": reviews_to_show, 
+	"page_num": page_num,
+	}
 	return render(request, "reviews/showreviews.html", context=context)
 
 def reviewStats(request):
