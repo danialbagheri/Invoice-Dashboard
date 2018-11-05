@@ -51,7 +51,7 @@ def showReviews(request):
 	for review in reviews:
 		reviews_to_sort.append(reviews[review])
 
-	pprint.pprint(reviews_to_sort)
+	# pprint.pprint(reviews_to_sort)
 
 	# reviews_sorted = sorted(reviews_to_sort, key=lambda k: k['name'].lower())
 	if sort_on == "unpublished":
@@ -83,8 +83,9 @@ def showReviews(request):
 
 	context = {
 	"this_pages_reviews": this_pages_reviews,
-	# "reviews_to_show": reviews_to_show, 
-	"page_num": page_num,
+	"product": product,
+	"brand": brand,
+	"sort_on": sort_on,
 	}
 	return render(request, "reviews/showreviews.html", context=context)
 
