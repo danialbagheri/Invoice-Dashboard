@@ -41,11 +41,9 @@ def showReviews(request):
 	
 	# do api request to get reviews with filters
 
-	# response = requests.get("https://api.lincocare.co.uk/reviews/?brand=%s&product=%s" % (brand, product))
 	# response = requests.get("http://localhost:5000/reviews/?brand=%s&product=%s" % (brand, product))
 	response = requests.get("https://api.lincocare.co.uk/reviews/?brand=%s&product=%s" % (brand, product))
 	reviews = json.loads(response.text)
-	# pprint.pprint(reviews)
 	
 
 	# sort reviews depending on sort query string
@@ -73,49 +71,19 @@ def showReviews(request):
 		reviews_sorted = sorted(reviews_to_sort, key=lambda k: datetime.datetime.strptime( k['date_added'], "%a, %d %b %Y %X %Z" ), reverse=True)
 
 	
+	# paginate
+	p = Paginator(reviews_sorted, 10)
 
-	# slice to paginate
-	# slice all_blogposts to get blogposts_to_show. 
-	start_slice = (page_num-1) * NUM_REVIEWS_TO_SHOW 
-	end_slice = start_slice + NUM_REVIEWS_TO_SHOW
-	reviews_to_show = reviews_sorted[start_slice:end_slice]
-	
-	paginated_reviews = Paginator(reviews_sorted, 10)
+	this_pages_reviews = p.page(page_num)
 
-	pprint.pprint(paginated_reviews.page(page_num))
 
-	if len(reviews_to_show) <= 0: 
+	if len(this_pages_reviews) <= 0: 
 		raise Http404("No reviews to show.")
 
 
-	# Make pagination numbers for the bottom of the page
-
-	
-
-
-
-	# # Check whether there would be any more blog posts to show on the next page, and from this decide whether or not to show the NEXT PAGE button
-	# start_slice += NUM_REVIEWS_TO_SHOW
-	# end_slice += NUM_REVIEWS_TO_SHOW
-	# next_pages_blogposts = all_blogposts[start_slice:end_slice]
-	# if next_pages_blogposts.count() > 0:
-	# 	show_next_page = True
-	# else:
-	# 	show_next_page = False
-
-	# page_num += 1
-	# next_page_num = page_num + 1
-	# prev_page_num = page_num - 1
-
-	# # Decide whether to show the PREV PAGE  button or not
-	# if prev_page_num > 0:
-	# 	show_prev_page = True
-	# else:
-	# 	show_prev_page = False
-
-
 	context = {
-	"reviews_to_show": reviews_to_show, 
+	"this_pages_reviews": this_pages_reviews,
+	# "reviews_to_show": reviews_to_show, 
 	"page_num": page_num,
 	}
 	return render(request, "reviews/showreviews.html", context=context)

@@ -11,7 +11,9 @@
 <br/>
 <br/>
 
-{% for review in reviews_to_show %}
+
+{% for review in this_pages_reviews %}
+
 	{{review.approved}}
 	{{review.content}}
 	{{review.date_added}}
@@ -26,3 +28,21 @@
 	<br/>
 	<br/>
 {% endfor %}
+
+{% if this_pages_reviews.has_previous %}
+    <a href="?page={{ this_pages_reviews.previous_page_number }}">&lt;&lt;</a>
+{% endif %}
+
+
+Page {{this_pages_reviews.number}}
+
+{% if this_pages_reviews.has_next %}
+    <a href="?page={{ this_pages_reviews.next_page_number }}">&gt;&gt;</a> 
+{% endif %}
+
+of {{ this_pages_reviews.paginator.num_pages }}
+
+
+
+
+
