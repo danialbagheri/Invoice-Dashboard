@@ -1,4 +1,16 @@
 <h1>ejnejner</h1>
+<select name="forma" onchange="location = '?sort=' + this.value;">
+	<option value=""></option>
+	<option value="unpublished">Unpublished</option>
+	<option value="published">Published</option>
+	<option value="recent">Recent</option>
+	<option value="rating">Rating</option>
+	<option value="helpful">Helpful</option>
+
+</select>
+<br/>
+<br/>
+
 {% for review in reviews_to_show %}
 	{{review.approved}}
 	{{review.content}}
