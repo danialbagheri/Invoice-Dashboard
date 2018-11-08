@@ -1,7 +1,29 @@
-<h1>STATZ</h1>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-{{ num_reviews }}
+<h1>Stats</h1>
 
-{{ scores_count }}
-{{ scores_percentages }}
-{{ overall_average  }}
+
+<select onchange="location = '?brand={{brand}}&product=' + this.value;">
+	<option value="">Product</option>
+	{% for product in products_for_current_brand %}
+	<option value="{{product}}">{{product}}</option>
+	{% endfor %}
+</select>
+
+<select onchange="location = '?brand=' + this.value + '&product={{product}}';">
+	<option value="">Brand</option>
+	{% for b in all_brands %}
+	<option value="{{b}}">{{b}}</option>
+	{% endfor %}
+</select>
+
+
+<p>Overall average: {{ overall_average }} ({{ num_reviews }} reviews)</p>
+
+{% for score_count, scores_percentage in scores_info %}
+	
+	{{forloop.revcounter}} stars {{ scores_percentage}} ({{ score_count }}) 
+	<br/>
+	
+{% endfor %}
+

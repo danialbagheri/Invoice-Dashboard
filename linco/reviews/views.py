@@ -32,6 +32,7 @@ def showReviews(request):
 	brand = request.GET.get('brand')
 	if brand == None:
 		brand = ""
+	
 	sort_on = request.GET.get('sort')
 	page_num = request.GET.get('page')
 	if page_num == None:
@@ -49,11 +50,13 @@ def showReviews(request):
 	# sort reviews depending on sort query string
 	reviews_to_sort = []
 	for review in reviews:
+		current_date = datetime.datetime.strptime( reviews[review]['date_added'], "%a, %d %b %Y %X %Z")
+		# add date in iso form
+		reviews[review]['date_added_iso'] = current_date.isoformat()
+		# add id as an attribute rather than the list index
+		reviews[review]['id'] = review
 		reviews_to_sort.append(reviews[review])
 
-	# pprint.pprint(reviews_to_sort)
-
-	# reviews_sorted = sorted(reviews_to_sort, key=lambda k: k['name'].lower())
 	if sort_on == "unpublished":
 		reviews_sorted = sorted(reviews_to_sort, key=lambda k: k['approved'])
 	elif sort_on == "published":
@@ -72,7 +75,7 @@ def showReviews(request):
 
 	
 	# paginate
-	p = Paginator(reviews_sorted, 10)
+	p = Paginator(reviews_sorted, NUM_REVIEWS_TO_SHOW)
 
 	this_pages_reviews = p.page(page_num)
 
@@ -81,10 +84,25 @@ def showReviews(request):
 		raise Http404("No reviews to show.")
 
 
+	# pass through all brands
+	# TODO: GET THESE FROM THE PRODUCTS API
+	all_brands = ["calypso", "regen", "restora", "all"]
+	
+	# pass through all products for current brand
+	# Do another API request without filtering on brand, or else the products will be restricted
+	response_filtered_on_brand = requests.get("https://api.lincocare.co.uk/reviews/?brand=%s" % (brand))
+	rev_filtered_on_brand = json.loads(response_filtered_on_brand.text)
+	# get all products for current brand for the dropdown at the top
+	products_for_current_brand = set()
+	for x in rev_filtered_on_brand:
+		products_for_current_brand.add(rev_filtered_on_brand[x]['product'])
+
 	context = {
 	"this_pages_reviews": this_pages_reviews,
 	"product": product,
+	"products_for_current_brand": products_for_current_brand,
 	"brand": brand,
+	"all_brands": all_brands,
 	"sort_on": sort_on,
 	}
 	return render(request, "reviews/showreviews.html", context=context)
@@ -118,17 +136,36 @@ def reviewStats(request):
 		# Count of 1, 2, 3, 4 and 5 stars respectively within reviews
 		scores_count[y["score"]-1] += 1
 		# Add all scores for using later to work out general score average
-		cumulative_scores += y["score"]	
+		cumulative_scores += y["score"]
 	
 	scores_percentages = [ (x/num_reviews)*100 for x in scores_count ]
-	
+
+	scores_info = zip(scores_count, scores_percentages)
+	scores_info.reverse()
 	overall_average = cumulative_scores/num_reviews
 
+
+	# pass through all brands
+	# TODO: GET THESE FROM THE PRODUCTS API
+	all_brands = ["calypso", "regen", "restora", "all"]
+	
+	# pass through all products for current brand
+	# Do another API request without filtering on brand, or else the products will be restricted
+	response_filtered_on_brand = requests.get("https://api.lincocare.co.uk/reviews/?brand=%s" % (brand))
+	rev_filtered_on_brand = json.loads(response_filtered_on_brand.text)
+	# get all products for current brand for the dropdown at the top
+	products_for_current_brand = set()
+	for x in rev_filtered_on_brand:
+		products_for_current_brand.add(rev_filtered_on_brand[x]['product'])
+
+
+
 	context = {
-		"num_reviews": num_reviews,
-		"scores_count": scores_count,
-		"scores_percentages": scores_percentages,
 		"overall_average": overall_average,
+		"num_reviews": num_reviews,
+		"scores_info": scores_info,
+		"all_brands": all_brands,
+		"products_for_current_brand": products_for_current_brand,
 	}
 	
 	return render(request, "reviews/stats.html", context=context)

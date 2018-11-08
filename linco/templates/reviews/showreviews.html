@@ -1,8 +1,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-<h1>ejnejner</h1>
+<h1>Reviews for {{brand}}</h1>
 <select onchange="location = '?sort=' + this.value + '&brand={{brand}}&product={{product}}&page={{this_pages_reviews.number}}';">
-	<option value=""></option>
+	<option value="">Sort on</option>
 	<option value="unpublished">Unpublished</option>
 	<option value="published">Published</option>
 	<option value="recent">Recent</option>
@@ -10,23 +10,105 @@
 	<option value="helpful">Helpful</option>
 
 </select>
-<br/>
-<br/>
 
+<select onchange="location = '?sort={{sort_on}}&brand={{brand}}&product=' + this.value + '&page={{this_pages_reviews.number}}';">
+	<option value="">Product</option>
+	{% for product in products_for_current_brand %}
+	<option value="{{product}}">{{product}}</option>
+	{% endfor %}
+</select>
+
+<br/>
+<br/>
 
 {% for review in this_pages_reviews %}
+	
+	<span id="review-{{review.id}}" >
 
-	{{review.approved}}
-	{{review.content}}
-	{{review.date_added}}
-	{{review.downvotes}}
-	{{review.email}}
-	{{review.location}}
-	{{review.name}}
-	{{review.product}}
-	{{review.score}}
-	{{review.title}}
-	{{review.upvotes}}
+		{{review.title}}
+		{{review.content}}
+		
+		{{review.name}}
+		{{review.email}}
+		{{review.location}}
+		
+		{{review.date_added_iso}}
+
+		{{review.product}}
+		
+		{{review.upvotes}}
+		{{review.downvotes}}
+		
+		{{review.approved}}
+		{{review.score}}
+	</span>
+	
+
+	<!-- toggleable form -->
+	<form id="edit-review-{{review.id}}" class="edit-review" hidden="true">
+		{% if review.approved %}
+		<input id="approved-{{review.id}}" type="checkbox" value="{{review.approved}}" checked="true">
+		{% else %}
+		<input id="approved-{{review.id}}" type="checkbox" value="{{review.approved}}">
+		{% endif %}
+
+		<input id="title-{{review.id}}" type="text" value="review.title" required>
+
+		<input id="name-{{review.id}}" type="text" value="{{review.name}}" required>
+        <input id="email-{{review.id}}" type="email" value="{{review.email}}" required>
+        <input id="date-added-{{review.id}}" type="datetime-local" value="{{review.date_added_iso}}" required>
+        <input id="location-{{review.id}}" type="text" value="{{review.location}}" required>
+        <textarea id="content-{{review.id}}" value="{{review.content}}" rows="5" required>{{review.content}}</textarea>
+
+        <input id="product-{{review.id}}" type="text" value="{{review.product}}" required>
+        <input id="brand-{{review.id}}" type="text" value="{{review.brand}}" required>
+        
+        <select id="score-{{review.id}}">
+            {% if review.score == 1 %}
+            	<option value="1" selected>1</option>
+            {% else %}
+            	<option value="1">1</option>
+            {% endif %}
+
+            {% if review.score == 2 %}
+            	<option value="2" selected>2</option>
+            {% else %}
+            	<option value="2">2</option>
+            {% endif %}
+
+            {% if review.score == 3 %}
+            	<option value="3" selected>3</option>
+            {% else %}
+            	<option value="3">3</option>
+            {% endif %}
+
+            {% if review.score == 4 %}
+            	<option value="4" selected>4</option>
+            {% else %}
+            	<option value="4">4</option>
+            {% endif %}
+
+            {% if review.score == 5 %}
+            	<option value="5" selected>5</option>
+            {% else %}
+            	<option value="5">5</option>
+            {% endif %}
+
+        </select>
+
+
+        <input type="submit" value="Submit">
+	</form>
+	<!-- Toggle review/form -->
+	<button id="toggle-review-{{review.id}}" class="toggle-review">Edit</button>
+	<button id="approve-review-{{review.id}}" class="approve-review">Publish</button>
+	<button id="delete-review-{{review.id}}" class="delete-review">Delete</button>
+
+
+	<!-- <form id="review-update-form-${rev_id}" class="review-update-form" name="${rev_id}">
+        
+    
+    </form> -->
 	<br/>
 	<br/>
 {% endfor %}
@@ -53,9 +135,119 @@
 of {{ this_pages_reviews.paginator.num_pages }}
 
 <script>
+	const api_url = "https://api.lincocare.co.uk/reviews/"
+	// const api_url = "http://localhost:5000/reviews/"
+
 	// jQuery("#page_chooser_form").submit(function(){
 	// 	alert(this)
 	// })
+
+	jQuery(".toggle-review").click(function(){
+		rev_id = this.id.replace("toggle-review-", "");
+		jQuery("#review-"+rev_id).toggle();
+		jQuery("#edit-review-"+rev_id).toggle();
+	});
+
+	jQuery(".edit-review").submit(function(event){
+		event.preventDefault();
+		rev_id = this.id.replace("edit-review-", "");
+		
+		//grab the id to make the url to put to
+		url_to_put_to = api_url + rev_id;
+
+		// Get the data needed to input into putReview
+		let updated_product = jQuery(`#product-${rev_id}`).val();
+		let updated_brand = jQuery(`#brand-${rev_id}`).val();
+		let updated_name = jQuery(`#name-${rev_id}`).val();
+		let updated_email = jQuery(`#email-${rev_id}`).val();
+		let updated_score = jQuery(`#score-${rev_id}`).val();
+		let updated_content = jQuery(`#content-${rev_id}`).val();
+		let updated_location = jQuery(`#location-${rev_id}`).val();
+		let updated_title = jQuery(`#title-${rev_id}`).val();
+		let updated_approved = jQuery(`#approved-${rev_id}`).is(":checked");
+
+		let updated_date_added = jQuery(`#date-added-${rev_id}`).val();
+
+
+		let data_to_put = `{
+		    "approved": "${updated_approved}", 
+		    "name": "${updated_name}",
+		    "product": "${updated_product}",
+		    "brand": "${updated_brand}",
+		    "email": "${updated_email}",
+		    "score": "${updated_score}",
+		    "content": "${updated_content}",
+		    "location": "${updated_location}",
+		    "title": "${updated_title}",
+		    "date_added": "${updated_date_added}"
+		}`;
+
+		putReview(data_to_put, url_to_put_to);
+
+	});
+
+
+	jQuery(".approve-review").click(function(){
+		rev_id = this.id.replace("approve-review-", "");
+		
+		//grab the id to make the url to put to
+		url_to_put_to = api_url + rev_id;
+
+		data_to_put = '{"approved": "true"}';
+
+		putReview(data_to_put, url_to_put_to);
+
+		// location.reload();
+	});
+
+
+
+	jQuery(".delete-review").click(function(){
+		rev_id = this.id.replace("delete-review-", "");
+		url_to_delete_to = api_url + rev_id;
+		deleteReview(url_to_delete_to);
+	});
+
+	putReview = function(data_to_put, url_to_put_to){
+	    
+	    // Update a review
+	    jQuery.ajax({
+	        url: url_to_put_to,
+	        type: 'PUT',
+	        dataType: "json", //The data type expected of the server response
+	        cache: false,
+	        contentType: "application/json; charset=utf-8",
+	        data: data_to_put,
+	        // data: '{"approved": "true"}',
+	        headers: {"X-HTTP-Method-Override": "PUT"},
+	        error: function (errormessage) {
+	            console.log(errormessage);
+	        },
+	        success: function(result){
+	            console.log("successfully updated");
+	            location.reload();
+	        },
+	    });
+	}
+
+	deleteReview = function(url_to_delete_to){
+	    jQuery.ajax({
+	        url: url_to_delete_to,
+	        type: 'DELETE',
+	        cache: false,
+	        contentType: "application/json; charset=utf-8",
+	        headers: {"X-HTTP-Method-Override": "PUT"},
+	        error: function (errormessage) {
+	            console.log(errormessage);
+	        },
+	        success: function(result){
+	            console.log("successfully deleted " + this.name);
+				location.reload();
+	            
+	        },
+	    });
+	}
+
 </script>
 
 

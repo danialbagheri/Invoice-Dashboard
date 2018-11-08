@@ -43,6 +43,6 @@ urlpatterns = [
     url(r'^register$',register, name='register'),
     url(r'^accounts/profile/$',profile, name='profile'),
     url(r'^wiki/edit$',WikiEdit, name='Wiki_edit'),
-    url(r'^reviews', include('reviews.urls')),
+    url(r'^reviews/', include('reviews.urls'), name='reviews'),
 ]
 # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
