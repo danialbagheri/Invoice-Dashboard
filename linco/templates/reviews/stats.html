@@ -10,11 +10,12 @@
 	{% endfor %}
 </select>
 
-<select onchange="location = '?brand=' + this.value + '&product={{product}}';">
+<select onchange="location = '?brand=' + this.value;">
 	<option value="">Brand</option>
 	{% for b in all_brands %}
 	<option value="{{b}}">{{b}}</option>
 	{% endfor %}
+	<option value="all">All</option>
 </select>
 
 
