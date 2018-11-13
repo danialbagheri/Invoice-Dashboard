@@ -5,6 +5,6 @@ app_name = 'reviews'
 
 urlpatterns = [
     url(r'^$', views.chooseBrand, name='index'),
-	url(r'^stats/$', views.reviewStats, name='review_stats'),
+	url(r'^stats/$', views.stats, name='stats'),
 	url(r'^brands/$', views.showReviews, name='show_reviews'),
 ]
