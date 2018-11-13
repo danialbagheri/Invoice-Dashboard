@@ -1,6 +1,12 @@
 <h1>Reviews</h1>
+
+{% for brand in all_brands %}
+<a href="brands/?brand={{brand}}">{{ brand }}</a>
+{% endfor %}
+<!-- 
 <a href="brands/?brand=calypso">Calypso</a>
 <a href="brands/?brand=regen">Regen</a>
 <a href="brands/?brand=restora">Restora</a>
+ -->
 <a href="brands/">All</a>
 <a href="stats/">Stats</a>
