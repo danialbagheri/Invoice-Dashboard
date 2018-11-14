@@ -59,8 +59,8 @@ def showReviews(request):
 		page_num_qs = int(page_num_qs)
 	
 	# Do reviews api request to get reviews. Filter on brand and product
-	# reviews_resp = requests.get("http://localhost:5000/reviews/?brand=%s&product=%s" % (brand_qs, product_qs))
-	reviews_resp = requests.get("https://api.lincocare.co.uk/reviews/?brand=%s&product=%s" % (brand_qs, product_qs))
+	reviews_resp = requests.get("http://localhost:5000/reviews/?brand=%s&product=%s" % (brand_qs, product_qs))
+	# reviews_resp = requests.get("https://api.lincocare.co.uk/reviews/?brand=%s&product=%s" % (brand_qs, product_qs))
 	reviews = json.loads(reviews_resp.text)
 	
 
@@ -106,8 +106,8 @@ def showReviews(request):
 	
 	# Get all products for current brand
 	# Do another API request without filtering on brand, or else the products will be restricted
-	response_filtered_on_brand = requests.get("https://api.lincocare.co.uk/reviews/?brand=%s" % (brand_qs))
-	# response_filtered_on_brand = requests.get("http://localhost:5000/reviews/?brand=%s" % (brand_qs))
+	# response_filtered_on_brand = requests.get("https://api.lincocare.co.uk/reviews/?brand=%s" % (brand_qs))
+	response_filtered_on_brand = requests.get("http://localhost:5000/reviews/?brand=%s" % (brand_qs))
 	rev_filtered_on_brand = json.loads(response_filtered_on_brand.text)
 	# get all products for current brand for the dropdown at the top
 	products_for_current_brand = set()
@@ -130,15 +130,16 @@ def stats(request):
 	product_qs = request.GET.get('product')
 	if product_qs == None:
 		product_qs = ""
+	
 	brand_qs = request.GET.get('brand')
 	if brand_qs == None or brand_qs == "all":
 		brand_qs = ""
 	# do api request to get reviews with filters
 
-	response = requests.get("https://api.lincocare.co.uk/reviews/?brand=%s&product=%s" % (brand_qs, product_qs))
-	# response = requests.get("http://localhost:5000/reviews/?brand=%s&product=%s" % (brand_qs, product_qs))
+	# response = requests.get("https://api.lincocare.co.uk/reviews/?brand=%s&product=%s" % (brand_qs, product_qs))
+	response = requests.get("http://localhost:5000/reviews/?brand=%s&product=%s" % (brand_qs, product_qs))
 	reviews = json.loads(response.text)
-
+	pprint.pprint(reviews)
 	# process reviews to get 
 	# 	- num reviews
 	#	- percentages of each stars
@@ -170,10 +171,12 @@ def stats(request):
 
 	# Get all products for current brand from products api
 	prod_resp = requests.get("http://localhost:9999/products/?brand=%s" % (brand_qs))
-	prod_for_current_brand_all_info = json.loads(prod_resp.text)
-	products_for_current_brand = []
+
+
+	prod_for_current_brand_info = json.loads(prod_resp.text)
+	products_for_current_brand = set()
 	for prods in prod_for_current_brand_info:
-	 	products_for_current_brand.append(prods['name'])
+	 	products_for_current_brand.add(prods['product_category'])
 
 	# get all brands from products api
 	brands_resp = requests.get("http://localhost:9999/brands/")
