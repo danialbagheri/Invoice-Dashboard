@@ -16,19 +16,14 @@ from dateutil.parser import parse
 
 from django.core.paginator import Paginator
 
-
-'''
-NOTES:
-
-Rob says: I think we should rethink the url structure for the reviews. seems odd to have /reviews/brands/ then have a query string with brand in it.
-
-'''
-
+# reviews_api_url = "http://localhost:5000"
+reviews_api_url = "https://api.lincocare.co.uk"
+products_api_url = "http://localhost:9999"
 
 # Create your views here.
 def chooseBrand(request):
 
-	brands_resp = requests.get("http://localhost:9999/brands/")
+	brands_resp = requests.get(products_api_url + "/brands/")
 	all_brands = json.loads(brands_resp.text)
 
 	context = {
@@ -45,26 +40,39 @@ def showReviews(request):
 	# get product, brand, sort/filter and page number from query string 
 	# (vars that end in _qs are querystring)
 	product_qs = request.GET.get('product')
+
 	if product_qs == None:
 		product_qs = ""
 	brand_qs = request.GET.get('brand')
 	if brand_qs == None:
 		brand_qs = ""
+
+	# Get the product category ids by for the products of the current brand (if any) through the product API.
+	products_resp = requests.get(products_api_url+"/product-categories/?brand=%s" % (brand_qs))
+
+	products_for_current_brand = json.loads(products_resp.text)
+	product_category_ids = []
+	product_dropdown_info = []
+	for pr in products_for_current_brand:
+	 	product_category_ids.append(pr["id"])
+	 	product_dropdown_info.append((pr["id"], pr["name"]))
+
+	product_category_ids_for_qs = ",".join(product_category_ids)
 	
-	sort_on_qs = request.GET.get('sort')
-	page_num_qs = request.GET.get('page')
-	if page_num_qs == None:
-		page_num_qs = 1
+	# if there's a product query string, just get reviews of that product. Otherwise use product_category_ids_for_qs which will have all the products for the current brand
+	if product_qs:
+		reviews_resp = requests.get(reviews_api_url+"/reviews/?product=%s" % (product_qs))
+		# reviews_resp = requests.get("https://api.lincocare.co.uk/reviews/?product=%s" % (product_qs))
 	else:
-		page_num_qs = int(page_num_qs)
-	
-	# Do reviews api request to get reviews. Filter on brand and product
-	reviews_resp = requests.get("http://localhost:5000/reviews/?brand=%s&product=%s" % (brand_qs, product_qs))
-	# reviews_resp = requests.get("https://api.lincocare.co.uk/reviews/?brand=%s&product=%s" % (brand_qs, product_qs))
+		# PLEASE NOTE: THIS WILL MALFUNCTION IF THERE'S NO PRODUCTS CATEGORY IDS RETURNED FOR THIS BRAND BY THE PRODUCTS API. The product query string will be empty so it will show all the reviews. TO COMBAT THIS, WILL HAVE TO MAKE SURE THERE'S AT LEAST ONE PRODUCT CATEGORY FOR EACH BRAND.
+		# TODO: Think of alternative to this workaround !!!
+		reviews_resp = requests.get(reviews_api_url+"/reviews/?product=%s" % (product_category_ids_for_qs))
+		# reviews_resp = requests.get("https://api.lincocare.co.uk/reviews/?product=%s" % (product_category_ids_for_qs))
+
 	reviews = json.loads(reviews_resp.text)
 	
-
 	# sort reviews depending on sort query string
+	sort_on_qs = request.GET.get('sort')
 	reviews_to_sort = []
 	for review in reviews:
 		current_date = datetime.datetime.strptime( reviews[review]['date_added'], "%a, %d %b %Y %X %Z")
@@ -90,56 +98,76 @@ def showReviews(request):
 		# default sort by date
 		reviews_sorted = sorted(reviews_to_sort, key=lambda k: datetime.datetime.strptime( k['date_added'], "%a, %d %b %Y %X %Z" ), reverse=True)
 
+
+	# Get the product names for each of these reviews
+	for rr in reviews_sorted:
+		cat_id = rr["product_category_id"]
+		respp = requests.get(products_api_url+"/product-categories/{}/".format(cat_id))
+		tt = json.loads(respp.text)
+		rr["product_category_name"] = tt["name"]
 	
+
 	# paginate
+	page_num_qs = request.GET.get('page')
+	if page_num_qs == None:
+		page_num_qs = 1
+	else:
+		page_num_qs = int(page_num_qs)
+
 	p = Paginator(reviews_sorted, NUM_REVIEWS_TO_SHOW)
 
 	this_pages_reviews = p.page(page_num_qs)
 
-
-	
-	# Get brands from product api
-	# products api is on localhost:9999
-	brands_resp = requests.get("http://localhost:9999/brands/")
-	all_brands = json.loads(brands_resp.text)
-
-	
-	# Get all products for current brand
-	# Do another API request without filtering on brand, or else the products will be restricted
-	# response_filtered_on_brand = requests.get("https://api.lincocare.co.uk/reviews/?brand=%s" % (brand_qs))
-	response_filtered_on_brand = requests.get("http://localhost:5000/reviews/?brand=%s" % (brand_qs))
-	rev_filtered_on_brand = json.loads(response_filtered_on_brand.text)
-	# get all products for current brand for the dropdown at the top
-	products_for_current_brand = set()
-	for x in rev_filtered_on_brand:
-		products_for_current_brand.add(rev_filtered_on_brand[x]['product'])
-
 	context = {
 	"this_pages_reviews": this_pages_reviews,
-	"product": product_qs,
-	"products_for_current_brand": products_for_current_brand,
+	"product_qs": product_qs,
+	"product_dropdown_info": product_dropdown_info,
 	"brand": brand_qs,
-	"all_brands": all_brands,
 	"sort_on": sort_on_qs,
+	"reviews_api_url": reviews_api_url,
 	}
 	return render(request, "reviews/showreviews.html", context=context)
 
+
+
 def stats(request):
 
-	# get product filter from query string
+
+	# get product, brand, sort/filter and page number from query string 
+	# (vars that end in _qs are querystring)
 	product_qs = request.GET.get('product')
 	if product_qs == None:
 		product_qs = ""
-	
 	brand_qs = request.GET.get('brand')
-	if brand_qs == None or brand_qs == "all":
+	if brand_qs == None:
 		brand_qs = ""
-	# do api request to get reviews with filters
+	
 
-	# response = requests.get("https://api.lincocare.co.uk/reviews/?brand=%s&product=%s" % (brand_qs, product_qs))
-	response = requests.get("http://localhost:5000/reviews/?brand=%s&product=%s" % (brand_qs, product_qs))
-	reviews = json.loads(response.text)
-	pprint.pprint(reviews)
+	# Get brands from product api
+	# products api is on localhost:9999
+	brands_resp = requests.get(products_api_url+"/brands/")
+	all_brands = json.loads(brands_resp.text)
+
+	# Get the product category ids by for the products of the current brand (if any) through the product API.
+	products_resp = requests.get(products_api_url+"/product-categories/?brand=%s" % (brand_qs))
+	products_for_current_brand = json.loads(products_resp.text)
+	product_category_ids = []
+	product_dropdown_info = []
+	for pr in products_for_current_brand:
+	 	product_category_ids.append(pr["id"])
+	 	product_dropdown_info.append((pr["id"], pr["name"]))
+
+	product_category_ids_for_qs = ",".join(product_category_ids)
+
+	# if there's a product query string, just get reviews of that product. Otherwise use product_category_ids_for_qs which will have all the products for the current brand
+	if product_qs:
+		reviews_resp = requests.get(reviews_api_url+"/reviews/?product=%s" % (product_qs))
+	else:
+		reviews_resp = requests.get(reviews_api_url+"/reviews/?product=%s" % (product_category_ids_for_qs))
+
+	reviews = json.loads(reviews_resp.text)
+	
+
 	# process reviews to get 
 	# 	- num reviews
 	#	- percentages of each stars
@@ -169,27 +197,14 @@ def stats(request):
 		overall_average = cumulative_scores/num_reviews
 
 
-	# Get all products for current brand from products api
-	prod_resp = requests.get("http://localhost:9999/products/?brand=%s" % (brand_qs))
-
-
-	prod_for_current_brand_info = json.loads(prod_resp.text)
-	products_for_current_brand = set()
-	for prods in prod_for_current_brand_info:
-	 	products_for_current_brand.add(prods['product_category'])
-
-	# get all brands from products api
-	brands_resp = requests.get("http://localhost:9999/brands/")
-	all_brands = json.loads(brands_resp.text)
 
 	context = {
-		"brand": brand_qs,
-		"product": product_qs,
+		"all_brands": all_brands,
+		"brand_qs": brand_qs,
 		"overall_average": overall_average,
 		"num_reviews": num_reviews,
 		"scores_info": scores_info,
-		"all_brands": all_brands,
-		"products_for_current_brand": products_for_current_brand,
+		"product_dropdown_info": product_dropdown_info,
 	}
 	
 	return render(request, "reviews/stats.html", context=context)
