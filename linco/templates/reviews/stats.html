@@ -1,12 +1,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-<h1>Stats</h1>
+<h1>Stats {{brand_qs}}</h1>
 
 
-<select onchange="location = '?brand={{brand}}&product=' + this.value;">
+<select onchange="location = '?brand={{brand_qs}}&product=' + this.value;">
 	<option value="">Product</option>
-	{% for product in products_for_current_brand %}
-	<option value="{{product}}">{{product}}</option>
+	{% for x,y in product_dropdown_info %}
+	<option value="{{x}}">{{y}}</option>
 	{% endfor %}
 </select>
 
@@ -27,4 +27,3 @@
 	<br/>
 	
 {% endfor %}
-
