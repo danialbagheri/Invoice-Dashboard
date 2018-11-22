@@ -1,68 +1,86 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <h1>Reviews for {{brand}}</h1>
-<select onchange="location = '?sort=' + this.value + '&brand={{brand}}&product={{product}}&page={{this_pages_reviews.number}}';">
-	<option value="">Sort on</option>
-	<option value="unpublished">Unpublished</option>
-	<option value="published">Published</option>
-	<option value="recent">Recent</option>
-	<option value="rating">Rating</option>
-	<option value="helpful">Helpful</option>
 
-</select>
-
+<span>Product filter:</span>
+<!-- Leave brand query strings in these selects, as we use it to grab the products from the products API-->
 <select onchange="location = '?sort={{sort_on}}&brand={{brand}}&product=' + this.value + '&page={{this_pages_reviews.number}}';">
 	<option value="">Product</option>
-	{% for product in products_for_current_brand %}
-	<option value="{{product}}">{{product}}</option>
+	{% for prod_cat_id,prod_cat_name in product_dropdown_info %}
+	<option value="{{prod_cat_id}}">{{prod_cat_name}}</option>
 	{% endfor %}
 </select>
 
+<span style="float: right;">
+	<span>Sort by:</span>
+	<select onchange="location = '?sort=' + this.value + '&brand={{brand}}&product={{product_qs}}&page={{this_pages_reviews.number}}';">
+		<option value="">Sort on</option>
+		<option value="unpublished">Unpublished</option>
+		<option value="published">Published</option>
+		<option value="recent">Recent</option>
+		<option value="rating">Rating</option>
+		<option value="helpful">Helpful</option>
+	</select>
+</span>
 <br/>
 <br/>
 
 {% for review in this_pages_reviews %}
-	
-	<span id="review-{{review.id}}" >
-
-		{{review.title}}
-		{{review.content}}
-		
-		{{review.name}}
-		{{review.email}}
-		{{review.location}}
-		
-		{{review.date_added_iso}}
-
-		{{review.product}}
-		
-		{{review.upvotes}}
-		{{review.downvotes}}
-		
-		{{review.approved}}
-		{{review.score}}
+	<span id="review-{{review.id}}">
+		title: {{ review.title }}</br>
+		content: {{ review.content }}</br>
+		name: {{ review.name }}</br>
+		email: {{ review.email }}</br>
+		location: {{ review.location }}</br>
+		date_added_iso: {{ review.date_added_iso }}</br>
+		product_category_id: {{ review.product_category_id }}<br/>
+		product_category_name: {{ review.product_category_name }}</br>
+		upvotes: {{ review.upvotes }}</br>
+		downvotes: {{ review.downvotes }}</br>
+		approved: {{ review.approved }}</br>
+		score: {{ review.score }}</br>
 	</span>
 	
-
 	<!-- toggleable form -->
 	<form id="edit-review-{{review.id}}" class="edit-review" hidden="true">
+		
+		<label for="approved-{{review.id}}">Approved:</label>
 		{% if review.approved %}
 		<input id="approved-{{review.id}}" type="checkbox" value="{{review.approved}}" checked="true">
 		{% else %}
 		<input id="approved-{{review.id}}" type="checkbox" value="{{review.approved}}">
 		{% endif %}
+		<br/>
 
+		<label for="title-{{review.id}}">Title:</label>
 		<input id="title-{{review.id}}" type="text" value="review.title" required>
+		<br/>
 
+		<label for="name-{{review.id}}">Name:</label>
 		<input id="name-{{review.id}}" type="text" value="{{review.name}}" required>
+		<br/>
+		
+		<label for="email-{{review.id}}">Email:</label>
         <input id="email-{{review.id}}" type="email" value="{{review.email}}" required>
+		<br/>
+		
+		<label for="date-added-{{review.id}}">Date added:</label>
         <input id="date-added-{{review.id}}" type="datetime-local" value="{{review.date_added_iso}}" required>
+		<br/>
+		
+		<label for="location-{{review.id}}">Location:</label>
         <input id="location-{{review.id}}" type="text" value="{{review.location}}" required>
+        <br/>
+		
+		<label for="content-{{review.id}}">Content:</label>
         <textarea id="content-{{review.id}}" value="{{review.content}}" rows="5" required>{{review.content}}</textarea>
-
-        <input id="product-{{review.id}}" type="text" value="{{review.product}}" required>
-        <input id="brand-{{review.id}}" type="text" value="{{review.brand}}" required>
-        
+        <br/>
+		
+        <label for="product-category-id-{{review.id}}">Product category ID:</label>
+        <input id="product-category-id-{{review.id}}" type="text" value="{{review.product_category_id}}" required>
+        <br/>
+		
+        <label for="score-{{review.id}}">Score:</label>
         <select id="score-{{review.id}}">
             {% if review.score == 1 %}
             	<option value="1" selected>1</option>
@@ -95,7 +113,8 @@
             {% endif %}
 
         </select>
-
+        <br/>
+		
 
         <input type="submit" value="Submit">
 	</form>
@@ -105,7 +124,7 @@
 	<button id="delete-review-{{review.id}}" class="delete-review">Delete</button>
 
 
-	<!-- <form id="review-update-form-${rev_id}" class="review-update-form" name="${rev_id}">
+	<!-- <form id="review-update-form-${revId}" class="review-update-form" name="${revId}">
         
     
     </form> -->
@@ -118,7 +137,7 @@
     <a href="?page={{ this_pages_reviews.previous_page_number }}&sort={{sort_on}}&brand={{brand}}&product={{product}}">&lt;&lt;</a>
 {% endif %}
 
-<form id="page_chooser_form" action="" style="display: inline;">
+<form id="page-chooser-form" action="" style="display: inline;">
 	Page 
 	<input  type="text" name="page" value="{{this_pages_reviews.number}}">
 	<input  type="text" name="brand" value="{{brand}}" hidden=true">
@@ -135,67 +154,63 @@
 of {{ this_pages_reviews.paginator.num_pages }}
 
 <script>
-	const api_url = "https://api.lincocare.co.uk/reviews/"
-	// const api_url = "http://localhost:5000/reviews/"
-
-	// jQuery("#page_chooser_form").submit(function(){
+	const reviewsApiUrl = "{{ reviews_api_url }}/reviews/";
+	// jQuery("#page-chooser-form").submit(function(){
 	// 	alert(this)
 	// })
 
 	jQuery(".toggle-review").click(function(){
-		rev_id = this.id.replace("toggle-review-", "");
-		jQuery("#review-"+rev_id).toggle();
-		jQuery("#edit-review-"+rev_id).toggle();
+		revId = this.id.replace("toggle-review-", "");
+		jQuery("#review-"+revId).toggle();
+		jQuery("#edit-review-"+revId).toggle();
 	});
 
 	jQuery(".edit-review").submit(function(event){
 		event.preventDefault();
-		rev_id = this.id.replace("edit-review-", "");
+		revId = this.id.replace("edit-review-", "");
 		
 		//grab the id to make the url to put to
-		url_to_put_to = api_url + rev_id;
-
+		urlToPutTo = reviewsApiUrl + revId;
+		
 		// Get the data needed to input into putReview
-		let updated_product = jQuery(`#product-${rev_id}`).val();
-		let updated_brand = jQuery(`#brand-${rev_id}`).val();
-		let updated_name = jQuery(`#name-${rev_id}`).val();
-		let updated_email = jQuery(`#email-${rev_id}`).val();
-		let updated_score = jQuery(`#score-${rev_id}`).val();
-		let updated_content = jQuery(`#content-${rev_id}`).val();
-		let updated_location = jQuery(`#location-${rev_id}`).val();
-		let updated_title = jQuery(`#title-${rev_id}`).val();
-		let updated_approved = jQuery(`#approved-${rev_id}`).is(":checked");
+		let updatedProductCategoryId = jQuery(`#product-category-id-${revId}`).val();
+		let updatedName = jQuery(`#name-${revId}`).val();
+		let updatedEmail = jQuery(`#email-${revId}`).val();
+		let updatedScore = jQuery(`#score-${revId}`).val();
+		let updatedContent = jQuery(`#content-${revId}`).val();
+		let updatedLocation = jQuery(`#location-${revId}`).val();
+		let updatedTitle = jQuery(`#title-${revId}`).val();
+		let updatedApproved = jQuery(`#approved-${revId}`).is(":checked");
 
-		let updated_date_added = jQuery(`#date-added-${rev_id}`).val();
+		let updatedDateAdded = jQuery(`#date-added-${revId}`).val();
 
 
-		let data_to_put = `{
-		    "approved": "${updated_approved}", 
-		    "name": "${updated_name}",
-		    "product": "${updated_product}",
-		    "brand": "${updated_brand}",
-		    "email": "${updated_email}",
-		    "score": "${updated_score}",
-		    "content": "${updated_content}",
-		    "location": "${updated_location}",
-		    "title": "${updated_title}",
-		    "date_added": "${updated_date_added}"
+		let dataToPut = `{
+		    "approved": "${updatedApproved}", 
+		    "name": "${updatedName}",
+		    "productCategoryId": "${updatedProductCategoryId}",
+		    "email": "${updatedEmail}",
+		    "score": "${updatedScore}",
+		    "content": "${updatedContent}",
+		    "location": "${updatedLocation}",
+		    "title": "${updatedTitle}",
+		    "dateAdded": "${updatedDateAdded}"
 		}`;
 
-		putReview(data_to_put, url_to_put_to);
+		putReview(dataToPut, urlToPutTo);
 
 	});
 
 
 	jQuery(".approve-review").click(function(){
-		rev_id = this.id.replace("approve-review-", "");
+		revId = this.id.replace("approve-review-", "");
 		
 		//grab the id to make the url to put to
-		url_to_put_to = api_url + rev_id;
+		urlToPutTo = reviewsApiUrl + revId;
 
-		data_to_put = '{"approved": "true"}';
+		dataToPut = '{"approved": "true"}';
 
-		putReview(data_to_put, url_to_put_to);
+		putReview(dataToPut, urlToPutTo);
 
 		// location.reload();
 	});
@@ -203,21 +218,21 @@ of {{ this_pages_reviews.paginator.num_pages }}
 
 
 	jQuery(".delete-review").click(function(){
-		rev_id = this.id.replace("delete-review-", "");
-		url_to_delete_to = api_url + rev_id;
-		deleteReview(url_to_delete_to);
+		revId = this.id.replace("delete-review-", "");
+		urlToDeleteTo = reviewsApiUrl + revId;
+		deleteReview(urlToDeleteTo);
 	});
 
-	putReview = function(data_to_put, url_to_put_to){
+	putReview = function(dataToPut, urlToPutTo){
 	    
 	    // Update a review
 	    jQuery.ajax({
-	        url: url_to_put_to,
+	        url: urlToPutTo,
 	        type: 'PUT',
 	        dataType: "json", //The data type expected of the server response
 	        cache: false,
 	        contentType: "application/json; charset=utf-8",
-	        data: data_to_put,
+	        data: dataToPut,
 	        // data: '{"approved": "true"}',
 	        headers: {"X-HTTP-Method-Override": "PUT"},
 	        error: function (errormessage) {
@@ -230,9 +245,9 @@ of {{ this_pages_reviews.paginator.num_pages }}
 	    });
 	}
 
-	deleteReview = function(url_to_delete_to){
+	deleteReview = function(urlToDeleteTo){
 	    jQuery.ajax({
-	        url: url_to_delete_to,
+	        url: urlToDeleteTo,
 	        type: 'DELETE',
 	        cache: false,
 	        contentType: "application/json; charset=utf-8",
