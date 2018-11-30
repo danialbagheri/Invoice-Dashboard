@@ -1,5 +1,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+<script src="https://static.lincocare.co.uk/js/reviews_api.js"></script>
+
 <h1>Reviews for {{brand}}</h1>
 
 <span>Product filter:</span>
@@ -9,6 +11,7 @@
 	{% for prod_cat_id,prod_cat_name in product_dropdown_info %}
 	<option value="{{prod_cat_id}}">{{prod_cat_name}}</option>
 	{% endfor %}
+	<option value="">All</option>
 </select>
 
 <span style="float: right;">
@@ -53,7 +56,7 @@
 		<br/>
 
 		<label for="title-{{review.id}}">Title:</label>
-		<input id="title-{{review.id}}" type="text" value="review.title" required>
+		<input id="title-{{review.id}}" type="text" value="{{review.title}}" required>
 		<br/>
 
 		<label for="name-{{review.id}}">Name:</label>
@@ -171,7 +174,7 @@ of {{ this_pages_reviews.paginator.num_pages }}
 		
 		//grab the id to make the url to put to
 		urlToPutTo = reviewsApiUrl + revId;
-		
+
 		// Get the data needed to input into putReview
 		let updatedProductCategoryId = jQuery(`#product-category-id-${revId}`).val();
 		let updatedName = jQuery(`#name-${revId}`).val();
@@ -197,6 +200,7 @@ of {{ this_pages_reviews.paginator.num_pages }}
 		    "dateAdded": "${updatedDateAdded}"
 		}`;
 
+		console.log(dataToPut)
 		putReview(dataToPut, urlToPutTo);
 
 	});
@@ -212,7 +216,6 @@ of {{ this_pages_reviews.paginator.num_pages }}
 
 		putReview(dataToPut, urlToPutTo);
 
-		// location.reload();
 	});
 
 
@@ -223,46 +226,7 @@ of {{ this_pages_reviews.paginator.num_pages }}
 		deleteReview(urlToDeleteTo);
 	});
 
-	putReview = function(dataToPut, urlToPutTo){
-	    
-	    // Update a review
-	    jQuery.ajax({
-	        url: urlToPutTo,
-	        type: 'PUT',
-	        dataType: "json", //The data type expected of the server response
-	        cache: false,
-	        contentType: "application/json; charset=utf-8",
-	        data: dataToPut,
-	        // data: '{"approved": "true"}',
-	        headers: {"X-HTTP-Method-Override": "PUT"},
-	        error: function (errormessage) {
-	            console.log(errormessage);
-	        },
-	        success: function(result){
-	            console.log("successfully updated");
-	            location.reload();
-	        },
-	    });
-	}
-
-	deleteReview = function(urlToDeleteTo){
-	    jQuery.ajax({
-	        url: urlToDeleteTo,
-	        type: 'DELETE',
-	        cache: false,
-	        contentType: "application/json; charset=utf-8",
-	        headers: {"X-HTTP-Method-Override": "PUT"},
-	        error: function (errormessage) {
-	            console.log(errormessage);
-	        },
-	        success: function(result){
-	            console.log("successfully deleted " + this.name);
-				location.reload();
-	            
-	        },
-	    });
-	}
-
+	
 </script>
 
 

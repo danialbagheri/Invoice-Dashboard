@@ -65,7 +65,7 @@ def showReviews(request):
 		# reviews_resp = requests.get("https://api.lincocare.co.uk/reviews/?product=%s" % (product_qs))
 	else:
 		# PLEASE NOTE: THIS WILL MALFUNCTION IF THERE'S NO PRODUCTS CATEGORY IDS RETURNED FOR THIS BRAND BY THE PRODUCTS API. The product query string will be empty so it will show all the reviews. TO COMBAT THIS, WILL HAVE TO MAKE SURE THERE'S AT LEAST ONE PRODUCT CATEGORY FOR EACH BRAND.
-		# TODO: Think of alternative to this workaround !!!
+		# TODO: Think of alternative to this workaround
 		reviews_resp = requests.get(reviews_api_url+"/reviews/?product=%s" % (product_category_ids_for_qs))
 		# reviews_resp = requests.get("https://api.lincocare.co.uk/reviews/?product=%s" % (product_category_ids_for_qs))
 
@@ -105,7 +105,8 @@ def showReviews(request):
 		respp = requests.get(products_api_url+"/product-categories/{}/".format(cat_id))
 		tt = json.loads(respp.text)
 		rr["product_category_name"] = tt["name"]
-	
+
+	# TODO: Replace newlines with \n in reviews_sorted
 
 	# paginate
 	page_num_qs = request.GET.get('page')
@@ -131,7 +132,6 @@ def showReviews(request):
 
 
 def stats(request):
-
 
 	# get product, brand, sort/filter and page number from query string 
 	# (vars that end in _qs are querystring)

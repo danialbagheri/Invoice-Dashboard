@@ -1,11 +1,11 @@
 ### Linco Care dashboard
 
-> This app is under development.
+> This project is under development.
 
-Current modules in the app:
+Current apps in the project:
 
 * Payment receipts and invoice
-* Wiki for staff informaiton and handbook
-
+* Wiki for staff information and handbook
+* Reviews approval
 
 
