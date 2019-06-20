@@ -7,7 +7,7 @@ venv
 .venv
 *.db
 *.sqite3
-linco/settings.py
+# linco/settings.py
 linco/db.sqlite3
 linco/static/invoice/
 linco/linco/settings.py
